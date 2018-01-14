@@ -1,0 +1,21 @@
+site_name: Ultimate Ansible Bootcamp
+pages:
+  - Home: index.md
+  - Quick Dive:
+    - Ad Hoc Server Management: "ad-hoc.md"
+    - Modules - The Batteries Included: "modules.md"
+    - Learning to Write Infrastructure as a Code: "playbooks.md"
+    - Working with Roles: "roles.md"
+    - Variables and Templates: "templates_and_variables.md"
+    - Control Structures: "control_structures.md"
+  - Deep Dive:
+    - Ansible Vault: "ansible-vault.md"
+    - Ansible on Windows: "ansible-windows.md"
+    - Ansible Pull: "ansible-pull.md"
+    - Ansible Tower: "ansible-pull.md"
+    - Registered Variable: "registered_variables.md"
+  - Troubleshooting:
+    - Troubleshooting Techniques: "troubleshooting.md"
+docs_dir: chapters
+theme: readthedocs
+

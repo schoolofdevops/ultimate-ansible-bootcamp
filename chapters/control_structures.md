@@ -96,9 +96,9 @@ password={{ mysql_root_db_pass }}
 ```
     [...]
 - name: reset default root password
-shell: mysql --user=root --password="{{ MYSQL_DEFAULT_PASS }}" --connect-expired-password mysql < /root/.mysql_reset_pass.sql
-run_once: true
-ignore_errors: yes
+  shell: mysql --user=root --password="{{ MYSQL_DEFAULT_PASS }}" --connect-expired-password mysql < /root/.mysql_reset_pass.sql
+  run_once: true
+  ignore_errors: yes
      [...]
 ```
 

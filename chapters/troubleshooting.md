@@ -1,5 +1,5 @@
 Troubleshooting Techniques
-  * Useing verbose mode
+  * Using verbose mode
   * Using --start-at-task
   * Using --step
   * Using debugger
