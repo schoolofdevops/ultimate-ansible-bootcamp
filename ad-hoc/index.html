@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Ad Hoc Server Management - Ultimate Ansible Bootcamp</title>
+  <title>Getting started with Ansible - Ultimate Ansible Bootcamp</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Ad Hoc Server Management";
+    var mkdocs_page_name = "Getting started with Ansible";
     var mkdocs_page_input_path = "ad-hoc.md";
     var mkdocs_page_url = "/ad-hoc/";
   </script>
@@ -54,11 +54,11 @@
           
             <li class="toctree-l1">
 		
-    <span class="caption-text">Quick Dive</span>
+    <span class="caption-text">Bootcamp</span>
     <ul class="subnav">
                 <li class=" current">
                     
-    <a class="current" href="./">Ad Hoc Server Management</a>
+    <a class="current" href="./">Getting started with Ansible</a>
     <ul class="subnav">
             
     <li class="toctree-l3"><a href="#getting-started-with-ansible-ad-hoc-server-management">Getting Started with Ansible (Ad Hoc Server Management)</a></li>
@@ -68,8 +68,6 @@
             <li><a class="toctree-l4" href="#creating-project-specific-ansible-configuration">Creating Project Specific Ansible Configuration</a></li>
         
             <li><a class="toctree-l4" href="#creating-host-inventory">Creating Host Inventory</a></li>
-        
-            <li><a class="toctree-l4" href="#setting-up-passwordless-ssh-access-to-inventory-hosts">Setting up passwordless ssh access to inventory hosts</a></li>
         
             <li><a class="toctree-l4" href="#ad-hoc-commands">Ad Hoc commands</a></li>
         
@@ -84,15 +82,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../modules/">Modules - The Batteries Included</a>
+    <a class="" href="../playbooks/">Writing Playbook for Base System Configurations</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../playbooks/">Learning to Write Infrastructure as a Code</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../roles/">Working with Roles</a>
+    <a class="" href="../roles/">Configuring app server environment with Roles</a>
                 </li>
                 <li class="">
                     
@@ -107,7 +101,7 @@
           
             <li class="toctree-l1">
 		
-    <span class="caption-text">Deep Dive</span>
+    <span class="caption-text">Additional Topics</span>
     <ul class="subnav">
                 <li class="">
                     
@@ -165,11 +159,11 @@
     
       
         
-          <li>Quick Dive &raquo;</li>
+          <li>Bootcamp &raquo;</li>
         
       
     
-    <li>Ad Hoc Server Management</li>
+    <li>Getting started with Ansible</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -199,8 +193,10 @@ log_path=~/ansible.log
 </code></pre>
 
 <h2 id="creating-host-inventory">Creating Host Inventory</h2>
-<p>Create a new file called <em>myhosts.ini</em> in the same directory.
-Let's create three groups as follows,</p>
+<p>Since you are going to create a environment specific inventory,
+create a <strong>environments</strong> directory and a  file  inside it called <em>prod</em></p>
+<p>Let's create three groups as follows,</p>
+<p>file: environments/prod</p>
 <pre><code>[local]
 localhost ansible_connection=local
 
@@ -228,66 +224,6 @@ db
 <li>Third group holds the information about the database servers.</li>
 </ul>
 <p>The inventory file should look like below.</p>
-<h2 id="setting-up-passwordless-ssh-access-to-inventory-hosts">Setting up passwordless ssh access to inventory hosts</h2>
-<h3 id="generating-ssh-keypair-on-control-host">Generating ssh keypair on control host</h3>
-<p>Now on control host, execute the following command</p>
-<pre><code>ssh-keygen -t rsa
-</code></pre>
-
-<p>Now press enter for the passphrase and other queries.</p>
-<pre><code>Generating public/private rsa key pair.
-Enter file in which to save the key (/root/.ssh/id_rsa):
-Created directory '/root/.ssh'.
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /root/.ssh/id_rsa.
-Your public key has been saved in /root/.ssh/id_rsa.pub.
-The key fingerprint is:
-c5:a5:6d:60:56:5a:7b:3c:60:23:b5:0f:1b:cf:f9:fd root@ansible
-The key's randomart image is:
-+--[ RSA 2048]----+
-|          =oO    |
-|         + X *   |
-|          = B +  |
-|         . . O o |
-|        S   . =  |
-|               ..|
-|                o|
-|                .|
-|                E|
-+-----------------+
-</code></pre>
-
-<h3 id="copying-public-key-to-inventory-hosts">Copying public key to inventory hosts</h3>
-<p>Copy public key of control node to other hosts</p>
-<pre><code>ssh-copy-id vagrant@192.168.61.11
-
-ssh-copy-id vagrant@192.168.61.12
-
-ssh-copy-id vagrant@192.168.61.13
-
-ssh-copy-id vagrant@192.168.61.14
-</code></pre>
-
-<p>See this example output to verify with your output</p>
-<pre><code>The authenticity of host '192.168.61.11 (192.168.61.11)' can't be established.
-RSA key fingerprint is 32:7f:ad:d7:da:63:32:b6:a9:ff:59:af:09:1e:56:22.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '192.168.61.11' (RSA) to the list of known hosts.
-</code></pre>
-
-<p>The password for user <em>vagrant</em> is <em>vagrant</em></p>
-<h3 id="validate-the-passwordless-login">Validate the passwordless login</h3>
-<p>Let us check the connection of control node with other hosts</p>
-<pre><code>ssh vagrant@192.168.61.11
-
-ssh vagrant@192.168.61.12
-
-ssh vagrant@192.168.61.13
-
-ssh vagrant@192.168.61.14
-</code></pre>
-
 <h3 id="ansible-ping">Ansible ping</h3>
 <p>We will use Ansible to make sure all the hosts are reachable</p>
 <pre><code>ansible all -m ping
@@ -595,7 +531,7 @@ http://docs.ansible.com/ansible/modules_by_category.html</li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../modules/" class="btn btn-neutral float-right" title="Modules - The Batteries Included">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../playbooks/" class="btn btn-neutral float-right" title="Writing Playbook for Base System Configurations">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -627,7 +563,7 @@ http://docs.ansible.com/ansible/modules_by_category.html</li>
         <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../modules/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../playbooks/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
