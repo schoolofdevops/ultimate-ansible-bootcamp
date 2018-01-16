@@ -9,17 +9,23 @@
 	useradd -m  abc
 #### DESIRED STATE
 Modules allow us to  manage independent components or entities of our infrastructure
+#
+
 such as,    
+
 - packages files 
 - services network interfaces 
 - users & groups
 - cron jobs 
 - mount points
+#
+
 For Example,
-	user 
-	  name  = xyz 
-	  state = present 
-	  uid   = 5001 
-	  group = admins
+
+	user    <------------**Entity**
+	  name  = xyz <----------properties
+	  state = present <----------<span style="color:green">desired state
+	  uid   = 5001    <----------properties
+	  group = admins  <----------properties
 
 ### INVOKING MODULES
