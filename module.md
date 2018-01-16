@@ -146,3 +146,5 @@ Running Ad Hoc Command
 	  \nLoading mirror speeds from cached hostfile\n * base: mirror.fibergrid 
 	 .in\n * extras: mirror.fibergrid.in\n * updates: mirror.fibergrid.in\nR
 
+
+Thats **idempotence** in action  Ansible modules(most)  are idempotent.  Ansible modules will compare the desired state (policy we set)  with the current state of the entity on the system, and decide whether the action is necessary.
