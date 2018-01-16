@@ -465,7 +465,29 @@ PLAY RECAP *********************************************************************
 </code></pre>
 
 <h2 id="exercises">Exercises</h2>
-<h5 id="nano-project-create-mysql-role">Nano Project: Create MySQL Role</h5>
+<h4 id="nano-project-deploy-a-php-application">Nano Project: Deploy a PHP Application</h4>
+<p>devops-demo-app is an application written in  PHP. You have already setup the environment above with apache and php roles, to deploy this application.  Your job is to write the ansible code to  deploy this application on app servers. This code will be in the form of a role.</p>
+<p>You have been tasked to create a <strong>froentend</strong>  role with the following specs,</p>
+<ul>
+<li>Releases should be pulled from the github release page as provided in the resources below. Releases are in the form of an archive.</li>
+<li>Multiple copies of releases will be maintained on the app servers for enabling rollbacks. To support this, every time to deploy a new version of the app, create a new directory for it inside the /opt/app</li>
+</ul>
+<pre><code>e.g.
+
+opt
+  | __ app
+         \__ release
+                 |
+                 |____ devops-demo-app-1.0
+                 |
+                 |____ devops-demo-app-1.1
+
+</code></pre>
+
+<p><strong>Resources</strong>:
+  * PHP App Source : https://github.com/devopsdemoapps/devops-demo-app
+  * Releases: https://github.com/devopsdemoapps/devops-demo-app/releases</p>
+<h4 id="nano-project-create-mysql-role">Nano Project: Create MySQL Role</h4>
 <ul>
 <li>Create a Role to install and configure MySQL server   <ul>
 <li>Create role scaffold for mysql  using ansible-galaxy init  </li>
