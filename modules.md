@@ -67,10 +67,10 @@ Modules can also be called while writing tasks in **Playbook** using **YAML**
 
 **ansible-doc** :- This utility helps you find list of modules, how to use those along with example snippets.  	
 
-ansible-doc --help 	
-ansible-doc --list | head 	
-ansible-doc user 	
-ansible-doc -s user  
+* ansible-doc --help 	
+* ansible-doc --list | head 	
+* ansible-doc user 	
+* ansible-doc -s user  
 
 ### Using Common Modules  
 
@@ -105,12 +105,12 @@ ansible-doc -s user
 
 * Does not use Shell 
 * Does not have access to env 
-* > < | ; & operators will not work 
+* This > < | ; & operators will not work 
 * Secure and recommended  
 
 **Shell** :-  
 
 * Invokes /bin/sh 
 * Has access to env, variables etc 
-* > < | ; & operators will work 
+* >,<,|,;,& operators will work 
 * Use selectively
