@@ -1,4 +1,4 @@
-# Learning to Write Playbooks
+# Writing Playbook for Base System Configurations
 
 In this tutorial we are going to create a simple playbook to add system users, install and start ntp service and some basic utilities.
 
@@ -19,13 +19,13 @@ You have to create a playbook to configure all linux  systems  which will
 
 on all systems which belong to  prod group in the inventory
 
-To create playbook,
+To prepare for this chapter, lets switch the directory in the workspace,
 
-  * Change branch  to chap5
+  * From the workspace, change to **chap5**
 
 
 ```
-git checkout chap5
+cd  chap5
 ```
 
 
