@@ -469,7 +469,7 @@ PLAY RECAP *********************************************************************
 <p>devops-demo-app is an application written in  PHP. You have already setup the environment above with apache and php roles, to deploy this application.  Your job is to write the ansible code to  deploy this application on app servers. This code will be in the form of a role.</p>
 <p>You have been tasked to create a <strong>froentend</strong>  role with the following specs,</p>
 <ul>
-<li>Releases should be pulled from the github release page as provided in the resources below. Releases are in the form of an archive.</li>
+<li>Pull release packages from the github release page as provided in the resources below. Releases are in the form of an archive.</li>
 <li>Multiple copies of releases will be maintained on the app servers for enabling rollbacks. To support this, every time to deploy a new version of the app, create a new directory for it inside the /opt/app</li>
 </ul>
 <pre><code>e.g.
@@ -485,7 +485,7 @@ opt
 </code></pre>
 
 <ul>
-<li>Then create a symlink from the current version path to  <strong>/var/www/html/app</strong></li>
+<li>Create  a symlink from the current version path to  <strong>/var/www/html/app</strong></li>
 </ul>
 <pre><code>e.g.
 
@@ -497,9 +497,10 @@ lrwxrwxrwx 1 root root   36 Jan 16 13:28 app -&gt; /opt/app/release/devops-demo-
 
 <p><strong>Resources</strong>:</p>
 <ul>
-<li>PHP App Source : https://github.com/devopsdemoapps/devops-demo-app</li>
-<li>Releases: https://github.com/devopsdemoapps/devops-demo-app/releases</li>
+<li><strong>PHP App Source</strong> : https://github.com/devopsdemoapps/devops-demo-app</li>
+<li><strong>Releases</strong>: https://github.com/devopsdemoapps/devops-demo-app/releases</li>
 </ul>
+<p>Once deployed, visiting  <img alt="http://IADDRESS:81/app" src="http://IADDRESS:81/app" /> for app1 or with port 82 for (app2) should show the web app deployed.</p>
 <h4 id="nano-project-create-mysql-role">Nano Project: Create MySQL Role</h4>
 <ul>
 <li>Create a Role to install and configure MySQL server   <ul>
