@@ -184,13 +184,17 @@
                 <h1 id="configuring-app-server-environment-with-roles">Configuring app server environment with Roles</h1>
 <p>In the previous chapter, you have created and applied playbook for base systems configurations. Now is the time to start creating modular, reusable library of code for application configurations. In this chapter, we are going to write such modular code, in the form of roles and setup application server.  </p>
 <p>We are going to create the roles with following specs,</p>
-<p><strong>apache</strong> role which will
-  * Install <strong>httpd</strong> package
-  * Start httpd service
-  * Add a handler to restart service</p>
-<p><strong>php</strong> role to
-  * install <strong>php</strong> and <strong>php-mysql</strong>
-  * restart apache when packages are installed</p>
+<p><strong>apache</strong> role which will</p>
+<ul>
+<li>Install <strong>httpd</strong> package</li>
+<li>Start httpd service</li>
+<li>Add a handler to restart service</li>
+</ul>
+<p><strong>php</strong> role to</p>
+<ul>
+<li>install <strong>php</strong> and <strong>php-mysql</strong></li>
+<li>restart apache when packages are installed</li>
+</ul>
 <p>We will also refactor  <strong>systems.yml</strong> and move all the tasks to its own role i.e. <strong>systems</strong></p>
 <h3 id="creating-role-scaffolding-for-apache">Creating Role Scaffolding for Apache</h3>
 <ul>
