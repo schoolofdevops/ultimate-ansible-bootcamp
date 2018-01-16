@@ -195,8 +195,13 @@ log_path=~/ansible.log
 <h2 id="creating-host-inventory">Creating Host Inventory</h2>
 <p>Since you are going to create a environment specific inventory,
 create a <strong>environments</strong> directory and a  file  inside it called <em>prod</em></p>
-<p>Let's create three groups as follows,</p>
+<pre><code>mkdir environments
+
+</code></pre>
+
+<p>Create inventory file</p>
 <p>file: environments/prod</p>
+<p>Let's create three groups as follows,</p>
 <pre><code>[local]
 localhost ansible_connection=local
 
@@ -208,7 +213,7 @@ app1
 app2
 
 
-[db]a
+[db]
 db
 
 [prod:children]
@@ -231,19 +236,19 @@ db
 </code></pre>
 
 <p>[Output]</p>
-<pre><code>192.168.61.13 | SUCCESS =&gt; {
+<pre><code>lb | SUCCESS =&gt; {
     &quot;changed&quot;: false,
     &quot;ping&quot;: &quot;pong&quot;
 }
-192.168.61.11 | SUCCESS =&gt; {
+app1 | SUCCESS =&gt; {
     &quot;changed&quot;: false,
     &quot;ping&quot;: &quot;pong&quot;
 }
-192.168.61.12 | SUCCESS =&gt; {
+app2 | SUCCESS =&gt; {
     &quot;changed&quot;: false,
     &quot;ping&quot;: &quot;pong&quot;
 }
-localhost | SUCCESS =&gt; {
+db | SUCCESS =&gt; {
     &quot;changed&quot;: false,
     &quot;ping&quot;: &quot;pong&quot;
 }
