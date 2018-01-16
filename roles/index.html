@@ -73,17 +73,21 @@
     <a class="current" href="./">Working with Roles</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#chapter-6-working-with-roles">Chapter 6  : Working with Roles</a></li>
+    <li class="toctree-l3"><a href="#configuring-app-server-environment-with-roles">Configuring app server environment with Roles</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#61-creating-role-scaffolding-for-apache">6.1 Creating Role Scaffolding for Apache</a></li>
+            <li><a class="toctree-l4" href="#creating-role-scaffolding-for-apache">Creating Role Scaffolding for Apache</a></li>
         
-            <li><a class="toctree-l4" href="#62-writing-tasks-to-install-and-start-apache-web-service">6.2 Writing Tasks to Install and Start  Apache Web Service</a></li>
+            <li><a class="toctree-l4" href="#writing-tasks-to-install-and-start-apache-web-service">Writing Tasks to Install and Start  Apache Web Service</a></li>
         
-            <li><a class="toctree-l4" href="#63-managing-configuration-files-for-apache">6.3 Managing Configuration files for Apache</a></li>
+            <li><a class="toctree-l4" href="#create-a-role-to-install-php">Create a role to install php</a></li>
         
-            <li><a class="toctree-l4" href="#troubleshooting-exercise">Troubleshooting Exercise</a></li>
+            <li><a class="toctree-l4" href="#create-and-apply-playbook-to-configure-app-servers">Create and apply playbook to configure app servers</a></li>
+        
+            <li><a class="toctree-l4" href="#systems-role-dependencies-and-nested-roles">Systems role, dependencies and nested roles</a></li>
+        
+            <li><a class="toctree-l4" href="#creating-a-site-wide-playbook">Creating a Site Wide Playbook</a></li>
         
             <li><a class="toctree-l4" href="#exercises">Exercises</a></li>
         
@@ -177,13 +181,18 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="chapter-6-working-with-roles">Chapter 6  : Working with Roles</h1>
-<p>In this tutorial we are going to create simple, static role for apache which will,
+                <h1 id="configuring-app-server-environment-with-roles">Configuring app server environment with Roles</h1>
+<p>In the previous chapter, you have created and applied playbook for base systems configurations. Now is the time to start creating modular, reusable library of code for application configurations. In this chapter, we are going to write such modular code, in the form of roles and setup application server.  </p>
+<p>We are going to create the roles with following specs,</p>
+<p><strong>apache</strong> role which will
   * Install <strong>httpd</strong> package
-  * Configure <strong>httpd.conf</strong>, manage it as a static file
   * Start httpd service
-  * Add a notification and a  handler so that whenever the configuration is updated, service is automatically restarted.</p>
-<h3 id="61-creating-role-scaffolding-for-apache">6.1 Creating Role Scaffolding for Apache</h3>
+  * Add a handler to restart service</p>
+<p><strong>php</strong> role to
+  * install <strong>php</strong> and <strong>php-mysql</strong>
+  * restart apache when packages are installed</p>
+<p>We will also refactor  <strong>systems.yml</strong> and move all the tasks to its own role i.e. <strong>systems</strong></p>
+<h3 id="creating-role-scaffolding-for-apache">Creating Role Scaffolding for Apache</h3>
 <ul>
 <li>Change working  directory to <strong>/vagrant/code/chap5</strong></li>
 </ul>
@@ -230,7 +239,7 @@
 
 </code></pre>
 
-<h3 id="62-writing-tasks-to-install-and-start-apache-web-service">6.2 Writing Tasks to Install and Start  Apache Web Service</h3>
+<h3 id="writing-tasks-to-install-and-start-apache-web-service">Writing Tasks to Install and Start  Apache Web Service</h3>
 <p>We are going to create three different tasks files, one for each phase of application lifecycle
   * Install
   * Configure
@@ -245,7 +254,7 @@
 </code></pre>
 
 <ul>
-<li>To start the service, create  <strong>roles/apache/tasks/start.yml</strong> with the following content  </li>
+<li>To start the service, create  <strong>roles/apache/tasks/service.yml</strong> with the following content  </li>
 </ul>
 <pre><code>---
 - name: Starting Apache...
@@ -259,17 +268,67 @@
 <pre><code>---
 # tasks file for apache
 - include: install.yml
-- include: start.yml
+- include: service.yml
+</code></pre>
+
+<h3 id="create-a-role-to-install-php">Create a role to install php</h3>
+<p>Generate roles scaffold</p>
+<pre><code>ansible-galaxy init --offline --init-path=roles  php
+</code></pre>
+
+<p>roles/php/tasks/install.yml</p>
+<pre><code>---
+# install php related packages
+  - name: install php
+    package:
+      name: &quot;{{ item }}&quot;
+      state: installed
+    with_items:
+      - php
+      - php-mysql
+</code></pre>
+
+<p>file: roles/php/tasks/main.yml</p>
+<pre><code>---
+# tasks file for php
+- include: install.yml
+- include: service.yml
+</code></pre>
+
+<h4 id="adding-notifications-and-handlers">Adding Notifications and Handlers</h4>
+<ul>
+<li>Previously we have create a task to install php related packages.  After install these packages, to make it effective, its important to restart apache web server. To achieve this,  update the task to send a notification to the handler created above to restart  apache.  You simply have to add the line below which starts with <strong>notify</strong></li>
+</ul>
+<pre><code>- name: install php
+  package:
+    name: &quot;{{ item }}&quot;
+    state: installed
+  with_items:
+    - php
+    - php-mysql
+    - nmap
+  notify: Restart apache service
+
 </code></pre>
 
 <ul>
-<li>Create a playbook for app servers at /vagrant/chap5/app.yml with following contents</li>
+<li>Create the notification handler by updating   <strong>roles/apache/handlers/main.yml</strong>  </li>
+</ul>
+<pre><code>---
+- name: Restart apache service
+  service: name=httpd state=restarted
+</code></pre>
+
+<h3 id="create-and-apply-playbook-to-configure-app-servers">Create and apply playbook to configure app servers</h3>
+<ul>
+<li>Create a playbook for app servers <strong>app.yml</strong> with following contents</li>
 </ul>
 <pre><code>  ---
   - hosts: app
     become: true
     roles:
       - apache
+      - php
 </code></pre>
 
 <ul>
@@ -298,126 +357,47 @@ PLAY RECAP *********************************************************************
 192.168.61.13              : ok=3    changed=2    unreachable=0    failed=0
 </code></pre>
 
-<h3 id="63-managing-configuration-files-for-apache">6.3 Managing Configuration files for Apache</h3>
-<ul>
-<li>Copy <strong>index.html</strong> and <strong>httpd.conf</strong> from <strong>chap5/helper</strong> to <strong>/roles/apache/files/</strong> directory    </li>
-</ul>
-<pre><code>    cp helper/index.html helper/httpd.conf roles/apache/files/  
-</code></pre>
-
-<ul>
-<li>Create a task file at <strong>roles/apache/tasks/config.yml</strong> to manage files.    </li>
-</ul>
-<pre><code>---
-- name: Copying configuration files...
-  copy: src=httpd.conf
-        dest=/etc/httpd.conf
-        owner=root group=root mode=0644
-
-- name: Copying index.html file...
-  copy: src=index.html
-        dest=/var/www/html/index.html
-        mode=0777
-</code></pre>
-
-<h4 id="632-adding-notifications-and-handlers">6.3.2 Adding Notifications and Handlers</h4>
-<ul>
-<li>Previously we have create a task in roles/apache/tasks/config.yml to copy over httpd.conf to the app server. Update this file to send a notification to restart  service on configuration update.  You simply have to add the line which starts with <strong>notify</strong></li>
-</ul>
-<pre><code>  - name: Copying configuration files...
-    copy: src=httpd.conf
-          dest=/etc/httpd.conf
-          owner=root group=root mode=0644
-    notify: Restart apache service
-</code></pre>
-
-<ul>
-<li>Create the notification handler by updating   <strong>roles/apache/handlers/main.yml</strong>  </li>
-</ul>
-<pre><code>---
-- name: Restart apache service
-  service: name=httpd state=restarted
-</code></pre>
-
-<pre><code>  ansible-playbook app.yml
-</code></pre>
-
-<p>[Output]  </p>
-<pre><code>
-PLAY [Playbook to configure App Servers] ***************************************
-
-TASK [setup] *******************************************************************
-ok: [192.168.61.13]
-ok: [192.168.61.12]
-
-TASK [apache : Installing Apache...] *******************************************
-ok: [192.168.61.12]
-ok: [192.168.61.13]
-
-TASK [apache : Starting Apache...] *********************************************
-ok: [192.168.61.13]
-ok: [192.168.61.12]
-
-TASK [apache : Copying configuration files...] *********************************
-changed: [192.168.61.12]
-changed: [192.168.61.13]
-
-TASK [apache : Copying index.html file...] *************************************
-changed: [192.168.61.12]
-changed: [192.168.61.13]
-
-RUNNING HANDLER [apache : Restart apache service] ******************************
-changed: [192.168.61.12]
-changed: [192.168.61.13]
-
-PLAY RECAP *********************************************************************
-192.168.61.12              : ok=6    changed=3    unreachable=0    failed=0
-192.168.61.13              : ok=6    changed=3    unreachable=0    failed=0
-
-</code></pre>
-
-<h2 id="troubleshooting-exercise">Troubleshooting Exercise</h2>
-<p>Did the above command added the configuration files and restarted the service ? But we have already written <strong>config.yml</strong>. Troubleshoot why its not being run and fix it before you proceed.</p>
-<h3 id="64-base-role-and-role-nesting">6.4 Base Role and Role Nesting</h3>
+<h3 id="systems-role-dependencies-and-nested-roles">Systems role, dependencies and nested roles</h3>
+<p>You have already written a playbook to define common systems configurations. Now, go ahead and refactor it so that instead of calling tasks from playbook itself, it goes into its own role, and then call on each server.</p>
 <ul>
 <li>Create a base role with ansible-galaxy utility,  </li>
 </ul>
-<pre><code>  ansible-galaxy init --offline --init-path=roles base
+<pre><code>  ansible-galaxy init --offline --init-path=roles systems
 </code></pre>
 
 <ul>
-<li>Create tasks for base role by editing  <strong>/roles/base/tasks/main.yml</strong>  </li>
+<li>Copy over the  tasks from <strong>systems.yml</strong> and lets just add it to   <strong>/roles/base/tasks/main.yml</strong>  </li>
 </ul>
 <pre><code>---
-# tasks file for base
-# file: roles/base/tasks/main.yml
-  - name: create admin user
-    user: name=admin state=present uid=5001
+# tasks file for systems
+  - name: remove user dojo
+    user: &gt;
+      name=dojo
+      state=absent
 
-  - name: remove dojo
-    user: name=dojo  state=present
-
-  - name: install tree
-    yum:  name=tree  state=present
+  - name: install tree utility
+    yum: &gt;
+      name=tree
+      state=present
 
   - name: install ntp
-    yum:  name=ntp   state=present
-
-  - name: start ntp service
-    service: name=ntpd state=started enabled=yes
+    yum: &gt;
+      name=ntp
+      state=installed
 
 </code></pre>
 
 <ul>
-<li>Define base role as a dependency for  apache role,  </li>
+<li>Define systems role as a dependency for  apache role,  </li>
 <li>Update meta data for Apache by editing <strong>roles/apache/meta/main.yml</strong> and adding the following</li>
 </ul>
 <pre><code>---
 dependencies:
- - {role: base}
+ - {role: systems}
 </code></pre>
 
-<h3 id="65-creating-a-site-wide-playbook">6.5  Creating a Site Wide Playbook</h3>
+<p>Next time you run  <strong>app.yml</strong>, observe if the above tasks get invoked as well.</p>
+<h3 id="creating-a-site-wide-playbook">Creating a Site Wide Playbook</h3>
 <p>We will create a site wide playbook, which will call all the plays required to configure the complete infrastructure. Currently we have a single  playbook for App Servers. However, in future we would create many.</p>
 <ul>
 <li>Create <strong>site.yml</strong> in /vagrant/chap5 directory and add the following content</li>
@@ -485,11 +465,7 @@ PLAY RECAP *********************************************************************
 </code></pre>
 
 <h2 id="exercises">Exercises</h2>
-<h5 id="exercise-1-update-apache-configurations">Exercise 1: Update Apache Configurations</h5>
-<ul>
-<li>Update httpd.conf and change some configuration parameters. Validate the service restarts on configuration updates by applying the sitewide playbook.</li>
-</ul>
-<h5 id="exercise-2-create-mysql-role">Exercise 2: Create MySQL Role</h5>
+<h5 id="nano-project-create-mysql-role">Nano Project: Create MySQL Role</h5>
 <ul>
 <li>Create a Role to install and configure MySQL server   <ul>
 <li>Create role scaffold for mysql  using ansible-galaxy init  </li>

@@ -69,7 +69,7 @@
     <a class="current" href="./">Learning to Write Infrastructure as a Code</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#learning-to-write-playbooks">Learning to Write Playbooks</a></li>
+    <li class="toctree-l3"><a href="#writing-playbook-for-base-system-configurations">Writing Playbook for Base System Configurations</a></li>
     
         <ul>
         
@@ -177,39 +177,32 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="learning-to-write-playbooks">Learning to Write Playbooks</h1>
+                <h1 id="writing-playbook-for-base-system-configurations">Writing Playbook for Base System Configurations</h1>
 <p>In this tutorial we are going to create a simple playbook to add system users, install and start ntp service and some basic utilities.</p>
 <h2 id="anatomy-of-a-playbook">Anatomy of a Playbook</h2>
 <h2 id="yaml-the-language-to-write-playbooks">YAML - The Language to write Playbooks</h2>
 <h2 id="writing-and-executing-our-first-playbook">Writing and executing our first Playbook</h2>
 <p><strong>Problem Statement</strong>  </p>
-<p>You have to create a playbook which will<br />
+<p>You have to create a playbook to configure all linux  systems  which will<br />
   * create a admin user with uid 5001
   * remove  user dojo
   * install tree  utility
   * install ntp</p>
 <p>on all systems which belong to  prod group in the inventory</p>
-<p>To create playbook,</p>
+<p>To prepare for this chapter, lets switch the directory in the workspace,</p>
 <ul>
-<li>Change working directory to /vagrant/code/chap5  </li>
+<li>From the workspace, change to <strong>chap5</strong></li>
 </ul>
-<pre><code>cd /vagrant/code/chap5
+<pre><code>cd  chap5
 </code></pre>
 
 <ul>
 <li>
-<p>Edit myhosts.ini if required and comment the hosts which are absent.</p>
+<p>Edit environments/prod if required and comment the hosts which are absent.</p>
 </li>
 <li>
-<p>Add the following configuration to ansible.cfg.   </p>
+<p>Create a new file with name <em>systems.yml</em> and add the following content to it</p>
 </li>
-</ul>
-<pre><code>retry_files_save_path = /tmp
-</code></pre>
-
-<p>This defines the path where retry files are created in case of failed ansible run. We will learn about this in later in this chapter.</p>
-<ul>
-<li>Create a new file with name <em>playbook.yml</em> and add the following content to it</li>
 </ul>
 <pre><code>---
   - name: Base Configurations for ALL hosts
@@ -232,7 +225,7 @@
 
 <h3 id="validating-syntax">Validating Syntax</h3>
 <p>Option 1 : Using --syntax-check option with ansible-playbook</p>
-<pre><code>ansible-playbook playbook.yml --syntax-check
+<pre><code>ansible-playbook systems.yml --syntax-check
 </code></pre>
 
 <p><strong>Exercise:</strong>   Break the syntax, run playbook with --syntax check again, and learn how it works.</p>
@@ -251,7 +244,7 @@
 
 <pre><code>[output]
 
-Usage: ansible-playbook playbook.yml
+Usage: ansible-playbook systems.yml
 
 Options:
   --ask-become-pass     ask for privilege escalation password
@@ -270,25 +263,25 @@ Options:
 
 <h4 id="dry-run">Dry Run</h4>
 <p>To execute ansible in a check mode, which will simulate tasks on the remote nodes, without actually committing, ansible provides --check or -C option. This can be invoked as ,</p>
-<pre><code>ansible-playbook playbook.yml --check
+<pre><code>ansible-playbook systems.yml --check
 
 </code></pre>
 
 <p>or</p>
-<pre><code>ansible-playbook playbook.yml -C
+<pre><code>ansible-playbook systems.yml -C
 </code></pre>
 
 <h3 id="listing-hosts-tasks-and-tags-in-a-playbook">Listing Hosts, Tasks and Tags in a Playbook</h3>
-<pre><code>ansible-playbook playbook.yml --list-hosts
+<pre><code>ansible-playbook systems.yml --list-hosts
 
-ansible-playbook playbook.yml --list-tasks
+ansible-playbook systems.yml --list-tasks
 
-ansible-playbook playbook.yml --list-tags
+ansible-playbook systems.yml --list-tags
 </code></pre>
 
 <h3 id="executing-actions-with-playbooks">Executing Actions with Playbooks</h3>
 <p>To execute  the playbook, we are going to execute <strong>ansible-playbook</strong> comman with playbook  YAML file as an argument. Since we have already defined the inventory and configurations, additional options are not necessary at this time.</p>
-<pre><code>ansible-playbook playbook.yml
+<pre><code>ansible-playbook systems.yml
 </code></pre>
 
 <pre><code>[output]
@@ -344,7 +337,7 @@ changed: [192.168.61.14]
 <ul>
 <li>Apply playbook again, check the output</li>
 </ul>
-<pre><code>ansible-playbook playbook.yml
+<pre><code>ansible-playbook systems.yml
 
 </code></pre>
 
@@ -366,11 +359,11 @@ localhost                  : ok=5    changed=0    unreachable=0    failed=1
 <p>Exercise : There was a intentional error introduced in the code. Identify the error from the log message above, correct it  and run the playbook again. This time you should run it  only on the failed hosts by limiting  with the retry file mentioned above (e.g. --limit @/tmp/playbook.retry )</p>
 <h3 id="debugging-technique-step-by-step-execution">Debugging Technique : Step By Step Execution</h3>
 <p>Ansible provides a way to execute tasks step by step, asking you whether to run or skip each task. This can be useful while debugging issues.</p>
-<pre><code>ansible-playbook playbook.yml --step
+<pre><code>ansible-playbook systems.yml --step
 </code></pre>
 
 <p>[Output]</p>
-<pre><code>root@control:/workspace/chap5# ansible-playbook playbook.yml --step                             
+<pre><code>root@control:/workspace/chap5# ansible-playbook systems.yml --step                             
 
 PLAY [Base Configurations for ALL hosts] ***************************************                
 Perform task: TASK: setup (N)o/(y)es/(c)ontinue: y                                              
@@ -401,26 +394,26 @@ ok: [db]
 
 <h3 id="adding-additional-play">Adding Additional  Play</h3>
 <p>Problem Statement:</p>
-<p>You have to a new play to existing playbook  which will</p>
+<p>You have to add a  new play to configure the following only on the app servers</p>
 <ul>
-<li>create a app user with uid 5003</li>
+<li>create a deploy user with uid 5003</li>
 <li>install git</li>
 <li>on all app servers in the inventory</li>
 </ul>
-<p>Lets add a second play specific to app servers. Add the following block of code in playbook.yml file and save   </p>
+<p>Lets add a second play specific to app servers. Add the following block of code in systems.yml file and save   </p>
 <pre><code>- name: App Server Configurations
   hosts: app
   become: true
   tasks:
-    - name: create app user
-      user: name=app state=present uid=5003
+    - name: create deploy user
+      user: name=deploy state=present uid=5003
 
     - name: install git
       yum:  name=git  state=present
 </code></pre>
 
 <p>Run the playbook again...  </p>
-<pre><code>ansible-playbook playbook.yml
+<pre><code>ansible-playbook systems.yml
 </code></pre>
 
 <pre><code>.......
@@ -449,7 +442,7 @@ localhost                  : ok=6    changed=0    unreachable=0    failed=0
 
 <h3 id="limiting-the-execution-to-a-particular-group">Limiting the execution to a particular group</h3>
 <p>Now run the following command to restrict the playbook execution to <em>app servers</em>  </p>
-<pre><code>ansible-playbook playbook.yml --limit app
+<pre><code>ansible-playbook systems.yml --limit app
 </code></pre>
 
 <p>This will give us the following output, plays will be executed only on app servers...  </p>

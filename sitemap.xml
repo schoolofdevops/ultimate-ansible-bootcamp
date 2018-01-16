@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,37 +13,37 @@
         
     <url>
      <loc>/ad-hoc/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/modules/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/playbooks/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/roles/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/templates_and_variables/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/control_structures/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -53,31 +53,31 @@
         
     <url>
      <loc>/ansible-vault/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ansible-windows/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ansible-pull/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ansible-pull/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/registered_variables/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -87,7 +87,7 @@
         
     <url>
      <loc>/troubleshooting/</loc>
-     <lastmod>2018-01-15</lastmod>
+     <lastmod>2018-01-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
