@@ -484,6 +484,17 @@ opt
 
 </code></pre>
 
+<ul>
+<li>Then create a symlink from the current version path to  <strong>/var/www/html/app</strong></li>
+</ul>
+<pre><code>e.g.
+
+[root@app2 /]# ls -l /var/www/html/
+total 8
+lrwxrwxrwx 1 root root   36 Jan 16 13:28 app -&gt; /opt/app/release/devops-demo-app-1.1
+
+</code></pre>
+
 <p><strong>Resources</strong>:
   * PHP App Source : https://github.com/devopsdemoapps/devops-demo-app
   * Releases: https://github.com/devopsdemoapps/devops-demo-app/releases</p>
