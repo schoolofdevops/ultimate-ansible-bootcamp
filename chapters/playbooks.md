@@ -11,7 +11,7 @@ In this tutorial we are going to create a simple playbook to add system users, i
 
 **Problem Statement**  
 
-You have to create a playbook which will  
+You have to create a playbook to configure all linux  systems  which will  
   * create a admin user with uid 5001
   * remove  user dojo
   * install tree  utility
@@ -21,27 +21,19 @@ on all systems which belong to  prod group in the inventory
 
 To create playbook,
 
-  * Change working directory to /vagrant/code/chap5  
+  * Change branch  to chap5
 
 
 ```
-cd /vagrant/code/chap5
+git checkout chap5
 ```
 
 
 
-  * Edit myhosts.ini if required and comment the hosts which are absent.
-
-  * Add the following configuration to ansible.cfg.   
-
-```
-retry_files_save_path = /tmp
-```
-
-  This defines the path where retry files are created in case of failed ansible run. We will learn about this in later in this chapter.
+  * Edit environments/prod if required and comment the hosts which are absent.
 
 
-  * Create a new file with name *playbook.yml* and add the following content to it
+  * Create a new file with name *systems.yml* and add the following content to it
 
 ```
 ---
@@ -68,7 +60,7 @@ retry_files_save_path = /tmp
 Option 1 : Using --syntax-check option with ansible-playbook
 
 ```
-ansible-playbook playbook.yml --syntax-check
+ansible-playbook systems.yml --syntax-check
 ```
 
 
@@ -95,7 +87,7 @@ To learn how to use ansible-playbook execute the following command,
 ```
 [output]
 
-Usage: ansible-playbook playbook.yml
+Usage: ansible-playbook systems.yml
 
 Options:
   --ask-become-pass     ask for privilege escalation password
@@ -117,23 +109,23 @@ Options:
 To execute ansible in a check mode, which will simulate tasks on the remote nodes, without actually committing, ansible provides --check or -C option. This can be invoked as ,
 
 ```
-ansible-playbook playbook.yml --check
+ansible-playbook systems.yml --check
 
 ```
 
 or
 ```
-ansible-playbook playbook.yml -C
+ansible-playbook systems.yml -C
 ```
 
 ### Listing Hosts, Tasks and Tags in a Playbook
 
 ```
-ansible-playbook playbook.yml --list-hosts
+ansible-playbook systems.yml --list-hosts
 
-ansible-playbook playbook.yml --list-tasks
+ansible-playbook systems.yml --list-tasks
 
-ansible-playbook playbook.yml --list-tags
+ansible-playbook systems.yml --list-tags
 ```
 
 ### Executing Actions with Playbooks  
@@ -141,7 +133,7 @@ ansible-playbook playbook.yml --list-tags
 To execute  the playbook, we are going to execute **ansible-playbook** comman with playbook  YAML file as an argument. Since we have already defined the inventory and configurations, additional options are not necessary at this time.
 
 ```
-ansible-playbook playbook.yml
+ansible-playbook systems.yml
 ```
 
 ```
@@ -204,7 +196,7 @@ When you add this task, make sure the indentation is correct.
 
 
 ```
-ansible-playbook playbook.yml
+ansible-playbook systems.yml
 
 ```
 
@@ -230,13 +222,13 @@ Exercise : There was a intentional error introduced in the code. Identify the er
 Ansible provides a way to execute tasks step by step, asking you whether to run or skip each task. This can be useful while debugging issues.
 
 ```
-ansible-playbook playbook.yml --step
+ansible-playbook systems.yml --step
 ```
 
 [Output]
 
 ```
-root@control:/workspace/chap5# ansible-playbook playbook.yml --step                             
+root@control:/workspace/chap5# ansible-playbook systems.yml --step                             
 
 PLAY [Base Configurations for ALL hosts] ***************************************                
 Perform task: TASK: setup (N)o/(y)es/(c)ontinue: y                                              
@@ -270,21 +262,21 @@ ok: [db]
 
 Problem Statement:
 
-You have to a new play to existing playbook  which will
+You have to add a  new play to configure the following only on the app servers
 
-  * create a app user with uid 5003
+  * create a deploy user with uid 5003
   * install git
   * on all app servers in the inventory
 
-Lets add a second play specific to app servers. Add the following block of code in playbook.yml file and save   
+Lets add a second play specific to app servers. Add the following block of code in systems.yml file and save   
 
 ```
 - name: App Server Configurations
   hosts: app
   become: true
   tasks:
-    - name: create app user
-      user: name=app state=present uid=5003
+    - name: create deploy user
+      user: name=deploy state=present uid=5003
 
     - name: install git
       yum:  name=git  state=present
@@ -293,7 +285,7 @@ Lets add a second play specific to app servers. Add the following block of code 
 Run the playbook again...  
 
 ```
-ansible-playbook playbook.yml
+ansible-playbook systems.yml
 ```
 
 ```
@@ -326,7 +318,7 @@ localhost                  : ok=6    changed=0    unreachable=0    failed=0
 Now run the following command to restrict the playbook execution to *app servers*  
 
 ```
-ansible-playbook playbook.yml --limit app
+ansible-playbook systems.yml --limit app
 ```
 
 This will give us the following output, plays will be executed only on app servers...  
