@@ -24,7 +24,7 @@ For Example,
 
 	user    <------------**Entity**
 	  name  = xyz <----------properties
-	  state = present <----------<span style="color:green">desired state
+	  state = present <----------<span style="color:green">desired state</span>
 	  uid   = 5001    <----------properties
 	  group = admins  <----------properties
 
