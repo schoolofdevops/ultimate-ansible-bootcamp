@@ -130,3 +130,19 @@ Running Ad Hoc Command
                 "Loaded plugins: fastestmirror, ovl\nSetting up Install Process
         \nLoading mirror speeds from cached hostfile\n * base: mirror.fibergrid
        .in\n * extras: mirror.fibergrid.in\n * updates: mirror.fibergrid.in\nR
+
+#### RERUN 
+
+ 	ansible db -s -m yum -a "name=vim  state=present"
+
+#
+
+	db | SUCCESS => {
+	      "changed": true,
+	      "msg": "",
+	      "rc": 0,
+	      "results": [
+	          "Loaded plugins: fastestmirror, ovl\nSetting up Install Process
+	  \nLoading mirror speeds from cached hostfile\n * base: mirror.fibergrid 
+	 .in\n * extras: mirror.fibergrid.in\n * updates: mirror.fibergrid.in\nR
+
