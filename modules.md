@@ -112,5 +112,5 @@ Modules can also be called while writing tasks in **Playbook** using **YAML**
 
 * Invokes /bin/sh 
 * Has access to env, variables etc 
-* >,<,|,;,& operators will work 
+* This > < | ; & operators will work 
 * Use selectively
