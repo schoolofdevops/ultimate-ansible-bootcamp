@@ -84,7 +84,9 @@ Only requirement is you take inputs and outputs in the format Ansible recognizes
 
 #### FINDING INFO
 
-#####FINDING INFO ansible-doc
+#### FINDING INFO 
+
+**ansible-doc**
 
 This utility helps you find list of modules, how to use those along with example snippets.
 
@@ -96,7 +98,7 @@ This utility helps you find list of modules, how to use those along with example
   
 	ansible-doc -s user
 
-#####INVOKING A MODULE
+##### INVOKING A MODULE
 
 Lets use a module for
 
@@ -104,7 +106,7 @@ Lets use a module for
 - on load **balancer** 
 - whose OS is **CentOS**
 
-#####PROCEDURAL VS DES
+##### PROCEDURAL VS DES
 
 
            module       attributes
