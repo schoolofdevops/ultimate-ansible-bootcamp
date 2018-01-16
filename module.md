@@ -4,3 +4,5 @@
 - Invoking Modules  
 - Using Common Modules  
 - Command Modules and Idempotence
+### DESIRED STATE
+### INVOKING MODULES
