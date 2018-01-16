@@ -187,3 +187,13 @@ Thats **idempotence** in action  Ansible modules(most)  are idempotent.  Ansible
 - shell 
 - expect
 
+
+#### COMMAND MODULES
+
+It is recommended that you use a **specialized** **module** for the **entity** that you would like to manage or **action** you would want to take.......
+
+
+- copy a file <----------copy
+-  install a package on Redhat <-------yum
+-  manage vlan on Cisco NX OS <--------nxos_vlan
+-  create a  subnet on aws cloud<--------ec2_vpc__subnet
