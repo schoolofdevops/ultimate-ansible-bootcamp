@@ -148,3 +148,42 @@ Running Ad Hoc Command
 
 
 Thats **idempotence** in action  Ansible modules(most)  are idempotent.  Ansible modules will compare the desired state (policy we set)  with the current state of the entity on the system, and decide whether the action is necessary.
+
+#### USING COMMON MODULES
+
+##### COMMON MODULES
+
+**PACKAGES**
+
+- yum 
+- apt 
+- gem
+- pip
+
+**Files** 
+
+- copy 
+- fetch 
+- template  
+
+**System** 
+
+- user 
+- group 
+- cron 
+- mount 
+- iptables 
+- ping
+
+**Utilities** 
+
+- debug
+-  assert 
+- wait_for  
+
+**Commands** 
+
+- command 
+- shell 
+- expect
+
