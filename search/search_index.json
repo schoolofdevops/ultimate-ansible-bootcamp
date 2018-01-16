@@ -117,48 +117,48 @@
         }, 
         {
             "location": "/modules/", 
-            "text": "Modules  \n\n\nTopics Included:-\n\n\n\n\nDesired State Configurations \n\n\nInvoking Modules \n\n\nUsing Common Modules \n\n\nCommand Modules and Idempotence  \n\n\n\n\nDesired State Configuration\n\n\nDesired State\n :- Once You decribe \nWHAT\n you want  using \ndesired state\n configurations you need not to worry about \nHow\n the state is acheived,\nwhether\n to take an action on which action to take \nIt's Ansible's Job\n\n\nuser  \n---------- Entity    \nname = XYZ \n----------Properties    \nState = Present \n----------  Desired State  \nuid = 5001 \n---------- Properties   \ngroup = admins \n---------- Properties\n\n\n\nModule Categories\n\n\n\n\nSystem \n\n\nCloud \n\n\nNetworking \n\n\nUtilities \n\n\nFiles \n\n\nDatabase \n\n\nInventory \n\n\nMessaging \n\n\nRemote management  \n\n\n\n\nModule Types\n\n\n\n\nCore \n\n\nExtras  \n\n\n\n\nCore :-\n\n\n\n\nMaintained by ansible team \n\n\nWill always be shipped with ansible  \n\n\n\n\nExtras :-\n\n\n\n\nMaintained by community \n\n\nCurrently shipped with ansible \n\n\nMay be shipped separately in future  \n\n\n\n\nInvoking Modules\n\n\nUsage\n :-  Modules are typically executed as a part of ansible command.    \n\n    ansible app -m yum -s -a \"name=ntp  state installed\" \n\n\n -m yum ---------\n Module name\n\n\n name=ntp ---------\n key=value\n\n* state  installed ---------\n arguments  \n\n\nModules can also be called while writing tasks in \nPlaybook\n using \nYAML\n       \n\n\n- name : install ntp package       \nyum : \n         \n  name: ntp         \n  state: present\n\n\n\nOutput\n \n\n\napp1 | SUCCESS =\n {         \n        \"changed\": false,         \n        \"ping\": \"pong\"    \n}\n\n\n\nFINDING INFO\n\n\nansible-doc\n :- This utility helps you find list of modules, how to use those along with example snippets.   \n\n\n\n\nansible-doc --help    \n\n\nansible-doc --list | head     \n\n\nansible-doc user  \n\n\nansible-doc -s user  \n\n\n\n\nUsing Common Modules\n\n\nCommon Modules :-\n\n\n\n\nPackages     \n\n\nyum    \n\n\napt    \n\n\ngem    \n\n\npip   \n\n\nFiles     \n\n\ncopy    \n\n\nfetch    \n\n\ntemplate   \n\n\nSystem     \n\n\nuser    \n\n\ngroup    \n\n\ncron    \n\n\nmount    \n\n\nping  \n\n\nUtilities     \n\n\ndebug    \n\n\nassert    \n\n\nwait_for  \n\n\nCommands     \n\n\ncommand    \n\n\nshell    \n\n\nexpect  \n\n\n\n\nCommand Modules\n\n\nCommand\n :-  \n\n\n\n\nDoes not use Shell \n\n\nDoes not have access to env \n\n\nThis \n \n | ; \n operators will not work \n\n\nSecure and recommended  \n\n\n\n\nShell\n :-  \n\n\n\n\nInvokes /bin/sh \n\n\nHas access to env, variables etc \n\n\nThis \n \n | ; \n operators will work \n\n\nUse selectively", 
+            "text": "Modules\n\n\nTopics Included\n\n\n\n\nDesired State Configurations\n\n\nInvoking Modules\n\n\nUsing Common Modules\n\n\nCommand Modules and Idempotence  \n\n\n\n\nDesired State Configuration\n\n\nDesired State\n :- Once You decribe \nWHAT\n you want  using \ndesired state\n configurations you need not to worry about \nHow\n the state is acheived,\nwhether\n to take an action on which action to take \nIt's Ansible's Job\n\n\n    user  \n---------- Entity    \n    name = XYZ \n----------Properties    \n    State = Present \n----------  Desired State  \n    uid = 5001 \n---------- Properties   \n    group = admins \n---------- Properties  \n\n\n\n\n\nModule Categories\n\n\n\n\nSystem\n\n\nCloud\n\n\nNetworking\n\n\nUtilities\n\n\nFiles\n\n\nDatabase\n\n\nInventory\n\n\nMessaging\n\n\nRemote management  \n\n\n\n\nModule Types\n\n\n\n\nCore\n\n\nExtras  \n\n\n\n\nCore :-\n\n\n\n\nMaintained by ansible team\n\n\nWill always be shipped with ansible  \n\n\n\n\nExtras :-\n\n\n\n\nMaintained by community\n\n\nCurrently shipped with ansible\n\n\nMay be shipped separately in future  \n\n\n\n\nInvoking Modules\n\n\nUsage\n :-  Modules are typically executed as a part of ansible command.      \n\n\n    ansible app -m yum -s -a \nname=ntp  state installed\n   \n\n* -m yum ---------\n Module name  \n* name=ntp ---------\n key=value  \n* state  installed ---------\n arguments  \n\n\n\n\nModules can also be called while writing tasks in \nPlaybook\n using \nYAML\n       \n\n\n    - name : install ntp package       \n    yum : \n         \n      name: ntp         \n      state: present  \n\n**Output**\n\n    app1 | SUCCESS =\n {         \n            \nchanged\n: false,         \n            \nping\n: \npong\n    \n    }  \n#### FINDING INFO  \n\n**ansible-doc** :- This utility helps you find list of modules, how to use those along with example snippets.   \n\n\n\n\n\nansible-doc --help\n\nansible-doc --list | head \n\nansible-doc user  \n\nansible-doc -s user\n\n```\n\n\nUsing Common Modules\n\n\nCommon Modules :-\n\n\n\n\nPackages     \n\n\nyum    \n\n\napt    \n\n\ngem    \n\n\npip   \n\n\nFiles     \n\n\ncopy    \n\n\nfetch    \n\n\ntemplate   \n\n\nSystem     \n\n\nuser    \n\n\ngroup    \n\n\ncron    \n\n\nmount    \n\n\nping  \n\n\nUtilities     \n\n\ndebug    \n\n\nassert    \n\n\nwait_for  \n\n\nCommands     \n\n\ncommand    \n\n\nshell    \n\n\nexpect  \n\n\n\n\nCommand Modules\n\n\nCommand\n :-  \n\n\n\n\nDoes not use Shell\n\n\nDoes not have access to env\n\n\nThis \n \n | ; \n operators will not work\n\n\nSecure and recommended  \n\n\n\n\nShell\n :-  \n\n\n\n\nInvokes /bin/sh\n\n\nHas access to env, variables etc\n\n\nThis \n \n | ; \n operators will work\n\n\nUse selectively", 
             "title": "Modules - The Batteries Included"
         }, 
         {
-            "location": "/modules/#topics-included-", 
-            "text": "Desired State Configurations   Invoking Modules   Using Common Modules   Command Modules and Idempotence", 
-            "title": "Topics Included:-"
+            "location": "/modules/#modules", 
+            "text": "", 
+            "title": "Modules"
+        }, 
+        {
+            "location": "/modules/#topics-included", 
+            "text": "Desired State Configurations  Invoking Modules  Using Common Modules  Command Modules and Idempotence", 
+            "title": "Topics Included"
         }, 
         {
             "location": "/modules/#desired-state-configuration", 
-            "text": "Desired State  :- Once You decribe  WHAT  you want  using  desired state  configurations you need not to worry about  How  the state is acheived, whether  to take an action on which action to take  It's Ansible's Job  user   ---------- Entity    \nname = XYZ  ----------Properties    \nState = Present  ----------  Desired State  \nuid = 5001  ---------- Properties   \ngroup = admins  ---------- Properties", 
+            "text": "Desired State  :- Once You decribe  WHAT  you want  using  desired state  configurations you need not to worry about  How  the state is acheived, whether  to take an action on which action to take  It's Ansible's Job      user   ---------- Entity    \n    name = XYZ  ----------Properties    \n    State = Present  ----------  Desired State  \n    uid = 5001  ---------- Properties   \n    group = admins  ---------- Properties", 
             "title": "Desired State Configuration"
         }, 
         {
             "location": "/modules/#module-categories", 
-            "text": "System   Cloud   Networking   Utilities   Files   Database   Inventory   Messaging   Remote management", 
+            "text": "System  Cloud  Networking  Utilities  Files  Database  Inventory  Messaging  Remote management", 
             "title": "Module Categories"
         }, 
         {
             "location": "/modules/#module-types", 
-            "text": "Core   Extras", 
+            "text": "Core  Extras", 
             "title": "Module Types"
         }, 
         {
             "location": "/modules/#core-", 
-            "text": "Maintained by ansible team   Will always be shipped with ansible", 
+            "text": "Maintained by ansible team  Will always be shipped with ansible", 
             "title": "Core :-"
         }, 
         {
             "location": "/modules/#extras-", 
-            "text": "Maintained by community   Currently shipped with ansible   May be shipped separately in future", 
+            "text": "Maintained by community  Currently shipped with ansible  May be shipped separately in future", 
             "title": "Extras :-"
         }, 
         {
             "location": "/modules/#invoking-modules", 
-            "text": "Usage  :-  Modules are typically executed as a part of ansible command.     \n    ansible app -m yum -s -a \"name=ntp  state installed\"    -m yum ---------  Module name   name=ntp ---------  key=value \n* state  installed ---------  arguments    Modules can also be called while writing tasks in  Playbook  using  YAML          - name : install ntp package       \nyum :           \n  name: ntp         \n  state: present  Output    app1 | SUCCESS =  {         \n        \"changed\": false,         \n        \"ping\": \"pong\"    \n}", 
+            "text": "Usage  :-  Modules are typically executed as a part of ansible command.            ansible app -m yum -s -a  name=ntp  state installed    \n\n* -m yum ---------  Module name  \n* name=ntp ---------  key=value  \n* state  installed ---------  arguments    Modules can also be called while writing tasks in  Playbook  using  YAML              - name : install ntp package       \n    yum :           \n      name: ntp         \n      state: present  \n\n**Output**\n\n    app1 | SUCCESS =  {         \n             changed : false,         \n             ping :  pong     \n    }  \n#### FINDING INFO  \n\n**ansible-doc** :- This utility helps you find list of modules, how to use those along with example snippets.     ansible-doc --help \nansible-doc --list | head  \nansible-doc user   \nansible-doc -s user \n```", 
             "title": "Invoking Modules"
-        }, 
-        {
-            "location": "/modules/#finding-info", 
-            "text": "ansible-doc  :- This utility helps you find list of modules, how to use those along with example snippets.      ansible-doc --help      ansible-doc --list | head       ansible-doc user    ansible-doc -s user", 
-            "title": "FINDING INFO"
         }, 
         {
             "location": "/modules/#using-common-modules", 
@@ -172,7 +172,7 @@
         }, 
         {
             "location": "/modules/#command-modules", 
-            "text": "Command  :-     Does not use Shell   Does not have access to env   This     | ;   operators will not work   Secure and recommended     Shell  :-     Invokes /bin/sh   Has access to env, variables etc   This     | ;   operators will work   Use selectively", 
+            "text": "Command  :-     Does not use Shell  Does not have access to env  This     | ;   operators will not work  Secure and recommended     Shell  :-     Invokes /bin/sh  Has access to env, variables etc  This     | ;   operators will work  Use selectively", 
             "title": "Command Modules"
         }, 
         {
