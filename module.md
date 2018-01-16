@@ -81,3 +81,41 @@ Module output is JSON data
 
 This is useful when you write your own modules, as you **need not stick to python** to create a custom module. 
 Only requirement is you take inputs and outputs in the format Ansible recognizes.
+
+#### FINDING INFO
+#####FINDING INFO ansible-doc
+This utility helps you find list of modules, how to use those along with example snippets.
+
+	ansible-doc --help
+  
+	ansible-doc --list | head
+  
+	ansible-doc user
+  
+	ansible-doc -s user
+
+#####INVOKING A MODULE
+Lets use a module for
+
+- Installing **vim** utility 
+- on load **balancer** 
+- whose OS is **CentOS**
+
+#####PROCEDURAL VS DES
+
+
+           module       attributes
+                                  (properties)
+
+#####INVOKING A MODULE
+	ansible db -s -m yum -a "name=vim  state=present"
+#
+ 
+	db | SUCCESS => { 
+            "changed": true,
+            "msg": "",
+            "rc": 0,
+            "results": [
+                "Loaded plugins: fastestmirror, ovl\nSetting up Install Process
+        \nLoading mirror speeds from cached hostfile\n * base: mirror.fibergrid
+       .in\n * extras: mirror.fibergrid.in\n * updates: mirror.fibergrid.in\nR
