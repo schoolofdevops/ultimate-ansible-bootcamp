@@ -22,10 +22,20 @@ such as,
 
 For Example,
 
-	user    <------------ **Entity**
+	user    <------------ Entity
 	  name  = xyz <---------- properties
-	  state = present <---------- <span style="color:green">desired state</span>
+	  state = present <---------- desired state
 	  uid   = 5001    <---------- properties
 	  group = admins  <---------- properties
+
+Once you describe **WHAT** you want
+
+  using **desired state** configurations
+
+  you need not worry about **how** the state is achieved, 
+**whether** to take an action and **which** action to take
+  
+Its **Ansible's** Job
+
 
 ### INVOKING MODULES
