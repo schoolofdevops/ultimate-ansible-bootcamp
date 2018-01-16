@@ -106,11 +106,16 @@ Lets use a module for
 - on load **balancer** 
 - whose OS is **CentOS**
 
-##### PROCEDURAL VS DES
+##### PROCEDURAL VS DESIRED STATE
 
+Running Ad Hoc Command
 
-           module       attributes
-                                  (properties)
+	ansible lb -s -a "yum install -y vim"
+#
+#### USING MODULE
+	ansible lb  -s -m yum -a "name=vim  state=present"
+                     module          attributes
+                                    (properties)
 
 ##### INVOKING A MODULE
 
