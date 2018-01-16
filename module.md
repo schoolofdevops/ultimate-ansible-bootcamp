@@ -37,5 +37,30 @@ Once you describe **WHAT** you want
   
 Its **Ansible's** Job
 
+#### MODULE CATAGORIES
+
+- SYSTEM CLOUD 
+- COMMAND NETWORKING 
+- PACKAGING CLUSTERING 
+- DATABASE FILES 
+- INVENTORY 
+- MESSAGING 
+- NOTIFICATION 
+- SOURCE CONTROL 
+- REMOTE MANAGEMENT
+
+##### CORE 
+- maintained by ansible team 
+- will always be shipped with ansible  
+##### EXTRA
+- maintained by community 
+- currently shipped with ansible 
+- may  be shipped separately in future
 
 ### INVOKING MODULES
+##### USAGE
+Modules are typically executed as a part of ansible command
+
+	ansible app  -m yum -s -a  "name=ntp     state=installed"
+	             ------------  --------     ---------------
+	            module name    key = value  arguments  params
