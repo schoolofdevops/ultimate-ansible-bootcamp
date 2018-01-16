@@ -48,7 +48,7 @@ Its **Ansible's** Job
 - NOTIFICATION 
 - SOURCE CONTROL 
 - REMOTE MANAGEMENT
-
+####MODULES TYPES
 ##### CORE 
 - maintained by ansible team 
 - will always be shipped with ansible  
@@ -64,3 +64,20 @@ Modules are typically executed as a part of ansible command
 	ansible app  -m yum -s -a  "name=ntp     state=installed"
 	             ------------  --------     ---------------
 	            module name    key = value  arguments  params
+##### USAGE
+Modules can also be called while writing tasks in **Playbooks** using **YAML**
+
+	- name: install ntp package 
+	  yum: >     
+		name: ntp     
+	  state: present
+#
+Module output is JSON data
+
+	app1 | SUCCESS => {     
+        "changed": false,     
+        "ping": "pong" 
+	}
+
+This is useful when you write your own modules, as you **need not stick to python** to create a custom module. 
+Only requirement is you take inputs and outputs in the format Ansible recognizes.
