@@ -4,12 +4,14 @@ In the previous chapter, you have created and applied playbook for base systems 
 
 We are going to create the roles with following specs,
 
-**apache** role which will
+apache role which will
+
   * Install **httpd** package
   * Start httpd service
   * Add a handler to restart service
 
 **php** role to
+
   * install **php** and **php-mysql**
   * restart apache when packages are installed
 
@@ -17,7 +19,7 @@ We will also refactor  **systems.yml** and move all the tasks to its own role i.
 
 
 ### Creating Role Scaffolding for Apache  
-  * Change working  directory to **/vagrant/code/chap5**
+  * Change working  directory to **chap6**
 
 ```
 cd  chap6

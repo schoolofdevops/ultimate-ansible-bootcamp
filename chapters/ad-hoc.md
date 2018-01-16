@@ -11,16 +11,19 @@ Change into /vagrant/code/chap3 directory on your ansible host. Create a file ca
 On Ansible Control node,
 
 ```
-mkdir /vagrant/code/chap3
-cd /vagrant/code/chap3
+cd chap4
 ```
 
-Create **ansible.cfg** in chap3
+Create **ansible.cfg** in chap4
 
 ```
 [defaults]
-remote_user = vagrant
-inventory   = myhosts.ini
+remote_user = devops
+inventory   = environments/prod
+retry_files_save_path = /tmp
+host_key_checking = False
+log_path=~/ansible.log
+
 ```
 
 ## Creating Host Inventory
@@ -32,12 +35,22 @@ Let's create three groups as follows,
 [local]
 localhost ansible_connection=local
 
-[app]
-192.168.61.12
-192.168.61.13
+[lb]
+lb
 
-[db]
-192.168.61.11
+[app]
+app1
+app2
+
+
+[db]a
+db
+
+[prod:children]
+lb
+app
+db
+
 ```
 
 * First group contains the localhost, the control host. Since it does not need to be connected over ssh, it mandates we add ansible_connection=local option
