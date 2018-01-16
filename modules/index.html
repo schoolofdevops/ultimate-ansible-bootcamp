@@ -65,7 +65,23 @@
     <a class="current" href="./">Modules - The Batteries Included</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#modules-the-batteris-included">Modules - The batteris included</a></li>
+    <li class="toctree-l3"><a href="#topics-included-">Topics Included:-</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#desired-state-configuration">Desired State Configuration</a></li>
+        
+            <li><a class="toctree-l4" href="#module-categories">Module Categories</a></li>
+        
+            <li><a class="toctree-l4" href="#module-types">Module Types</a></li>
+        
+            <li><a class="toctree-l4" href="#invoking-modules">Invoking Modules</a></li>
+        
+            <li><a class="toctree-l4" href="#using-common-modules">Using Common Modules</a></li>
+        
+            <li><a class="toctree-l4" href="#command-modules">Command Modules</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -163,7 +179,118 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="modules-the-batteris-included">Modules - The batteris included</h1>
+                <p>Modules  </p>
+<h2 id="topics-included-">Topics Included:-</h2>
+<ul>
+<li>Desired State Configurations </li>
+<li>Invoking Modules </li>
+<li>Using Common Modules </li>
+<li>Command Modules and Idempotence  </li>
+</ul>
+<h3 id="desired-state-configuration">Desired State Configuration</h3>
+<p><strong>Desired State</strong> :- Once You decribe <strong>WHAT</strong> you want  using <strong>desired state</strong> configurations you need not to worry about <strong>How</strong> the state is acheived,<strong>whether</strong> to take an action on which action to take <strong>It's Ansible's Job</strong></p>
+<pre><code>user  &lt;---------- Entity    
+name = XYZ &lt;----------Properties    
+State = Present &lt;----------  Desired State  
+uid = 5001 &lt;---------- Properties   
+group = admins &lt;---------- Properties
+</code></pre>
+<h3 id="module-categories">Module Categories</h3>
+<ul>
+<li>System </li>
+<li>Cloud </li>
+<li>Networking </li>
+<li>Utilities </li>
+<li>Files </li>
+<li>Database </li>
+<li>Inventory </li>
+<li>Messaging </li>
+<li>Remote management  </li>
+</ul>
+<h3 id="module-types">Module Types</h3>
+<ul>
+<li>Core </li>
+<li>Extras  </li>
+</ul>
+<h4 id="core-">Core :-</h4>
+<ul>
+<li>Maintained by ansible team </li>
+<li>Will always be shipped with ansible  </li>
+</ul>
+<h4 id="extras-">Extras :-</h4>
+<ul>
+<li>Maintained by community </li>
+<li>Currently shipped with ansible </li>
+<li>May be shipped separately in future  </li>
+</ul>
+<h3 id="invoking-modules">Invoking Modules</h3>
+<p><strong>Usage</strong> :-  Modules are typically executed as a part of ansible command.    <br />
+    ansible app -m yum -s -a "name=ntp  state installed" <br />
+<em> -m yum ---------&gt; Module name<br />
+</em> name=ntp ---------&gt; key=value<br />
+* state  installed ---------&gt; arguments  </p>
+<p>Modules can also be called while writing tasks in <strong>Playbook</strong> using <strong>YAML</strong>       </p>
+<pre><code>- name : install ntp package       
+yum : &gt;         
+  name: ntp         
+  state: present
+</code></pre>
+<p><strong>Output</strong> </p>
+<pre><code>app1 | SUCCESS =&gt; {         
+        "changed": false,         
+        "ping": "pong"    
+}
+</code></pre>
+<h4 id="finding-info">FINDING INFO</h4>
+<p><strong>ansible-doc</strong> :- This utility helps you find list of modules, how to use those along with example snippets.   </p>
+<ul>
+<li>ansible-doc --help    </li>
+<li>ansible-doc --list | head     </li>
+<li>ansible-doc user  </li>
+<li>ansible-doc -s user  </li>
+</ul>
+<h3 id="using-common-modules">Using Common Modules</h3>
+<h4 id="common-modules-">Common Modules :-</h4>
+<ol>
+<li>Packages     </li>
+<li>yum    </li>
+<li>apt    </li>
+<li>gem    </li>
+<li>pip   </li>
+<li>Files     </li>
+<li>copy    </li>
+<li>fetch    </li>
+<li>template   </li>
+<li>System     </li>
+<li>user    </li>
+<li>group    </li>
+<li>cron    </li>
+<li>mount    </li>
+<li>ping  </li>
+<li>Utilities     </li>
+<li>debug    </li>
+<li>assert    </li>
+<li>wait_for  </li>
+<li>Commands     </li>
+<li>command    </li>
+<li>shell    </li>
+<li>expect  </li>
+</ol>
+<h3 id="command-modules">Command Modules</h3>
+<p><strong>Command</strong> :-  </p>
+<ul>
+<li>Does not use Shell </li>
+<li>Does not have access to env </li>
+<li>This &gt; &lt; | ; &amp; operators will not work </li>
+<li>Secure and recommended  </li>
+</ul>
+<p><strong>Shell</strong> :-  </p>
+<ul>
+<li>Invokes /bin/sh </li>
+<li>Has access to env, variables etc </li>
+<li>This &gt; &lt; | ; &amp; operators will work </li>
+<li>Use selectively</li>
+</ul>
               
             </div>
           </div>

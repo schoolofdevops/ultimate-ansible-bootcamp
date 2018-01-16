@@ -190,8 +190,12 @@
 
 <p>Create <strong>ansible.cfg</strong> in chap4</p>
 <pre><code>[defaults]
-remote_user = vagrant
-inventory   = myhosts.ini
+remote_user = devops
+inventory   = environments/prod
+retry_files_save_path = /tmp
+host_key_checking = False
+log_path=~/ansible.log
+
 </code></pre>
 
 <h2 id="creating-host-inventory">Creating Host Inventory</h2>
@@ -200,12 +204,22 @@ Let's create three groups as follows,</p>
 <pre><code>[local]
 localhost ansible_connection=local
 
-[app]
-192.168.61.12
-192.168.61.13
+[lb]
+lb
 
-[db]
-192.168.61.11
+[app]
+app1
+app2
+
+
+[db]a
+db
+
+[prod:children]
+lb
+app
+db
+
 </code></pre>
 
 <ul>
