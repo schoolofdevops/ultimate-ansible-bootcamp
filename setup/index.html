@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Ansible on Windows - Ultimate Ansible Bootcamp</title>
+  <title>Setting up the Environment - Ultimate Ansible Bootcamp</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Ansible on Windows";
-    var mkdocs_page_input_path = "ansible-windows.md";
-    var mkdocs_page_url = "/ansible-windows/";
+    var mkdocs_page_name = "Setting up the Environment";
+    var mkdocs_page_input_path = "setup.md";
+    var mkdocs_page_url = "/setup/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -56,9 +56,29 @@
 		
     <span class="caption-text">Bootcamp</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../setup/">Setting up the Environment</a>
+    <a class="current" href="./">Setting up the Environment</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#settig-up-learning-environment">Settig up Learning Environment</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#setting-up-a-vagrant-based-environment">Setting up a Vagrant based environment</a></li>
+        
+            <li><a class="toctree-l4" href="#install-virtualbox-and-vagrant">Install VirtualBox and Vagrant</a></li>
+        
+            <li><a class="toctree-l4" href="#importing-a-vm-template">Importing a  VM Template</a></li>
+        
+            <li><a class="toctree-l4" href="#provisioning-vagrant-nodes">Provisioning Vagrant Nodes</a></li>
+        
+            <li><a class="toctree-l4" href="#setting-up-a-codespaces-environment-with-docker">Setting up a codespaces environment  with Docker</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -91,24 +111,9 @@
                     
     <a class="" href="../ansible-vault/">Ansible Vault</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Ansible on Windows</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#preparing-ansible-host">Preparing Ansible host</a></li>
-    
-
-    <li class="toctree-l3"><a href="#preparing-windows-host">Preparing Windows Host</a></li>
-    
-
-    <li class="toctree-l3"><a href="#setting-up-inventory-and-inventory-vars">Setting up inventory and inventory vars</a></li>
-    
-
-    <li class="toctree-l3"><a href="#reference">Reference</a></li>
-    
-
-    </ul>
+    <a class="" href="../ansible-windows/">Ansible on Windows</a>
                 </li>
                 <li class="">
                     
@@ -158,11 +163,11 @@
     
       
         
-          <li>Additional Topics &raquo;</li>
+          <li>Bootcamp &raquo;</li>
         
       
     
-    <li>Ansible on Windows</li>
+    <li>Setting up the Environment</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -172,84 +177,91 @@
           <div role="main">
             <div class="section">
               
-                <h3 id="preparing-ansible-host">Preparing Ansible host</h3>
-<pre><code>sudo yum install python-pip
-sudo pip install &quot;pywinrm&gt;=0.1.1&quot;
+                <h1 id="settig-up-learning-environment">Settig up Learning Environment</h1>
+<h3 id="setting-up-a-vagrant-based-environment">Setting up a Vagrant based environment</h3>
+<h3 id="install-virtualbox-and-vagrant">Install VirtualBox and Vagrant</h3>
+<table>
+<thead>
+<tr>
+<th>TOOL</th>
+<th>VERSION</th>
+<th>LINK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VirtualBox</td>
+<td>5.1.26</td>
+<td>https://www.virtualbox.org/wiki/Downloads</td>
+</tr>
+<tr>
+<td>Vagrant</td>
+<td>1.9.7</td>
+<td>https://www.vagrantup.com/downloads.html</td>
+</tr>
+</tbody>
+</table>
+<h3 id="importing-a-vm-template">Importing a  VM Template</h3>
+<pre><code>vagrant box list
+
+vagrant box add ansible  codespace-ansible-ubuntu1604-9.box
+
+vagrant box list
+
 </code></pre>
 
-<h3 id="preparing-windows-host">Preparing Windows Host</h3>
+<h3 id="provisioning-vagrant-nodes">Provisioning Vagrant Nodes</h3>
+<p>Clone repo if not already</p>
+<pre><code>git clone https://github.com/schoolofdevops/lab-setup.git
+
+
+</code></pre>
+
+<p>Launch environments with Vagrant</p>
+<pre><code>cd lab-setup/ansible/codespace
+
+vagrant up
+
+</code></pre>
+
+<p>Login to node</p>
+<p><strong>Terminal </strong></p>
+<pre><code>cd lab-setup/ansible/codespace
+vagrant ssh
+sudo su
+
+</code></pre>
+
+<p>You could also visit  <img alt="http://192.168.46.10:8000" src="http://192.168.46.10:8000" /> to access the codespaces env.</p>
+<h2 id="setting-up-a-codespaces-environment-with-docker">Setting up a codespaces environment  with Docker</h2>
 <ul>
-<li>Create a file and paste the below github content and save “PowerShell Scripts (* .ps1)”.</li>
+<li>Clone the git repo</li>
 </ul>
-<p>https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1</p>
+<pre><code>git clone https://github.com/codespaces-io/codespaces.git
+</code></pre>
+
+<h3 id="start-codespaces-ide">Start Codespaces IDE</h3>
+<p>After installing Docker-Engine and Docker-Compose, change directory into the corresponding tool you want to learn. For example, let us assume that you want to learn puppet. In that case,</p>
+<pre><code>cd cs-ansible
+</code></pre>
+
+<p>Then all you need to do is to run</p>
+<pre><code>docker-compose up -d
+</code></pre>
+
+<p>This single command will initialize your Codespaces IDE.</p>
+<h3 id="use-codespaces-ide">Use Codespaces IDE</h3>
+<p>To use Codespaces IDE,</p>
 <ul>
-<li>Double Click the file or open powershell and Execute it from the file path. winrm will be configured</li>
+<li>Open your browser.</li>
+<li>Visit your machine's IP with port 8000. (Ex. http://192.168.0.60:8080)</li>
+<li>You will be asked for your e-mail address. Enter it and you are good to go.</li>
 </ul>
-<h3 id="setting-up-inventory-and-inventory-vars">Setting up inventory and inventory vars</h3>
+<p><img alt="Email" src="https://github.com/codespaces-io/codespaces/blob/master/images/email.jpg?raw=true" /></p>
 <ul>
-<li>Add windows host to inventory by editing myhosts.ini</li>
+<li>Now you will be presented with the Codespaces IDE console.</li>
 </ul>
-<pre><code>    [windows]
-  windows_host_ip_or_hostname
-</code></pre>
-
-<p>Create group vars for windows group
-    - Create group_vars/windows.yml</p>
-<pre><code>    ansible_ssh_user: &lt;admin user&gt;
-    ansible_ssh_pass: &lt;admin user password&gt;
-    ansible_ssh_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_server_cert_validation: ignore
-</code></pre>
-
-<p>Validate Connectivity</p>
-<pre><code>ansible windows -i host -m win_ping
-ansible windows -i host -m setup
-
-</code></pre>
-
-<p>Create a Sample Playbook : windows.yml</p>
-<pre><code>---
-- name: test raw module
-  hosts: windows
-  tasks:
-    - name: run ipconfig
-      raw: ipconfig
-      register: ipconfig
-
-    - debug: var=ipconfig
-
-    - name: test stat module on file
-      win_stat: path=&quot;C:/Windows/win.ini&quot;
-      register: stat_file
-
-    - debug: var=stat_file
-
-    - name: check stat_file result
-      assert:
-          that:
-             - &quot;stat_file.stat.exists&quot;
-             - &quot;not stat_file.stat.isdir&quot;
-             - &quot;stat_file.stat.size &gt; 0&quot;
-             - &quot;stat_file.stat.md5&quot;
-
-    - name: Install IIS
-      win_feature:
-        name: &quot;Web-Server&quot;
-        state: absent
-        restart: yes
-        include_sub_features: yes
-        include_management_tools: yes
-</code></pre>
-
-<p>Execute Playbook as</p>
-<pre><code>ansible-playbook windows.yml
-
-</code></pre>
-
-<h1 id="reference">Reference</h1>
-<p>http://darrylcauldwell.com/how-to-setup-an-ansible-test-lab-for-windows-managed-nodes-custom-windows-modules/
-http://docs.ansible.com/ansible/intro_windows.html</p>
+<p><img alt="Landing" src="https://github.com/codespaces-io/codespaces/raw/master/images/landing.jpg?raw=true" /></p>
               
             </div>
           </div>
@@ -257,10 +269,10 @@ http://docs.ansible.com/ansible/intro_windows.html</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../ansible-pull/" class="btn btn-neutral float-right" title="Ansible Pull">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../ad-hoc/" class="btn btn-neutral float-right" title="Getting started with Ansible">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../ansible-vault/" class="btn btn-neutral" title="Ansible Vault"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -286,10 +298,10 @@ http://docs.ansible.com/ansible/intro_windows.html</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../ansible-vault/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../ansible-pull/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../ad-hoc/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
