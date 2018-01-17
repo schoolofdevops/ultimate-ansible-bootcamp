@@ -17,7 +17,7 @@
         }, 
         {
             "location": "/setup/", 
-            "text": "Settig up Learning Environment\n\n\nSetting up a Vagrant based environment\n\n\nInstall VirtualBox and Vagrant\n\n\n\n\n\n\n\n\nTOOL\n\n\nVERSION\n\n\nLINK\n\n\n\n\n\n\n\n\n\n\nVirtualBox\n\n\n5.1.26\n\n\nhttps://www.virtualbox.org/wiki/Downloads\n\n\n\n\n\n\nVagrant\n\n\n1.9.7\n\n\nhttps://www.vagrantup.com/downloads.html\n\n\n\n\n\n\n\n\nImporting a  VM Template\n\n\nvagrant box list\n\nvagrant box add ansible  codespace-ansible-ubuntu1604-9.box\n\nvagrant box list\n\n\n\n\n\nProvisioning Vagrant Nodes\n\n\nClone repo if not already\n\n\ngit clone https://github.com/schoolofdevops/lab-setup.git\n\n\n\n\n\n\nLaunch environments with Vagrant\n\n\ncd lab-setup/ansible/codespace\n\nvagrant up\n\n\n\n\n\nLogin to node\n\n\nTerminal \n\n\ncd lab-setup/ansible/codespace\nvagrant ssh\nsudo su\n\n\n\n\n\nYou could also visit  \n to access the codespaces env.\n\n\nSetting up a codespaces environment  with Docker\n\n\n\n\nClone the git repo\n\n\n\n\ngit clone https://github.com/codespaces-io/codespaces.git\n\n\n\n\nStart Codespaces IDE\n\n\nAfter installing Docker-Engine and Docker-Compose, change directory into the corresponding tool you want to learn. For example, let us assume that you want to learn puppet. In that case,\n\n\ncd cs-ansible\n\n\n\n\nThen all you need to do is to run\n\n\ndocker-compose up -d\n\n\n\n\nThis single command will initialize your Codespaces IDE.\n\n\nUse Codespaces IDE\n\n\nTo use Codespaces IDE,\n\n\n\n\nOpen your browser.\n\n\nVisit your machine's IP with port 8000. (Ex. http://192.168.0.60:8080)\n\n\nYou will be asked for your e-mail address. Enter it and you are good to go.\n\n\n\n\n\n\n\n\nNow you will be presented with the Codespaces IDE console.", 
+            "text": "Settig up Learning Environment\n\n\nOption 1: Setting up a Vagrant based environment\n\n\nInstall VirtualBox and Vagrant\n\n\n\n\n\n\n\n\nTOOL\n\n\nVERSION\n\n\nLINK\n\n\n\n\n\n\n\n\n\n\nVirtualBox\n\n\n5.1.26\n\n\nhttps://www.virtualbox.org/wiki/Downloads\n\n\n\n\n\n\nVagrant\n\n\n1.9.7\n\n\nhttps://www.vagrantup.com/downloads.html\n\n\n\n\n\n\n\n\nImporting a  VM Template\n\n\nvagrant box list\n\nvagrant box add ansible  codespace-ansible-ubuntu1604-9.box\n\nvagrant box list\n\n\n\n\n\nProvisioning Vagrant Nodes\n\n\nClone repo if not already\n\n\ngit clone https://github.com/schoolofdevops/lab-setup.git\n\n\n\n\n\n\nLaunch environments with Vagrant\n\n\ncd lab-setup/ansible/codespace\n\nvagrant up\n\n\n\n\n\nLogin to node\n\n\nTerminal\n\n\ncd lab-setup/ansible/codespace\nvagrant ssh\nsudo su\n\n\n\n\n\nYou could also visit  \n to access the codespaces env.\n\n\nOption 2: Setting up a codespaces environment  with Docker\n\n\n\n\nClone the git repo\n\n\n\n\ngit clone https://github.com/codespaces-io/codespaces.git\n\n\n\n\nStart Codespaces IDE\n\n\nAfter installing Docker-Engine and Docker-Compose, change directory into the corresponding tool you want to learn. For example, let us assume that you want to learn puppet. In that case,\n\n\ncd cs-ansible\n\n\n\n\nThen all you need to do is to run\n\n\ndocker-compose up -d\n\n\n\n\nThis single command will initialize your Codespaces IDE.\n\n\nUse Codespaces IDE\n\n\nTo use Codespaces IDE,\n\n\n\n\nOpen your browser.\n\n\nVisit your machine's IP with port 8000. (Ex. http://192.168.0.60:8080)\n\n\nYou will be asked for your e-mail address. Enter it and you are good to go.\n\n\n\n\n\n\n\n\nNow you will be presented with the Codespaces IDE console.", 
             "title": "Setting up the Environment"
         }, 
         {
@@ -26,9 +26,9 @@
             "title": "Settig up Learning Environment"
         }, 
         {
-            "location": "/setup/#setting-up-a-vagrant-based-environment", 
+            "location": "/setup/#option-1-setting-up-a-vagrant-based-environment", 
             "text": "", 
-            "title": "Setting up a Vagrant based environment"
+            "title": "Option 1: Setting up a Vagrant based environment"
         }, 
         {
             "location": "/setup/#install-virtualbox-and-vagrant", 
@@ -42,13 +42,13 @@
         }, 
         {
             "location": "/setup/#provisioning-vagrant-nodes", 
-            "text": "Clone repo if not already  git clone https://github.com/schoolofdevops/lab-setup.git  Launch environments with Vagrant  cd lab-setup/ansible/codespace\n\nvagrant up  Login to node  Terminal   cd lab-setup/ansible/codespace\nvagrant ssh\nsudo su  You could also visit    to access the codespaces env.", 
+            "text": "Clone repo if not already  git clone https://github.com/schoolofdevops/lab-setup.git  Launch environments with Vagrant  cd lab-setup/ansible/codespace\n\nvagrant up  Login to node  Terminal  cd lab-setup/ansible/codespace\nvagrant ssh\nsudo su  You could also visit    to access the codespaces env.", 
             "title": "Provisioning Vagrant Nodes"
         }, 
         {
-            "location": "/setup/#setting-up-a-codespaces-environment-with-docker", 
+            "location": "/setup/#option-2-setting-up-a-codespaces-environment-with-docker", 
             "text": "Clone the git repo   git clone https://github.com/codespaces-io/codespaces.git", 
-            "title": "Setting up a codespaces environment  with Docker"
+            "title": "Option 2: Setting up a codespaces environment  with Docker"
         }, 
         {
             "location": "/setup/#start-codespaces-ide", 
