@@ -197,3 +197,145 @@ It is recommended that you use a **specialized** **module** for the **entity** t
 -  install a package on Redhat <-------yum
 -  manage vlan on Cisco NX OS <--------nxos_vlan
 -  create a  subnet on aws cloud<--------ec2_vpc__subnet
+
+##### Problem Statement  1
+
+##### Create a group 
+
+-  on all prod servers
+-  whose name is "admin" 
+- whose gid  is "7045"
+
+	
+	module:group
+	name=admin
+	state=present
+	git=705
+	host pattern=prod
+	
+	http://docs.ansible.com/ansible/group_module.html
+
+#### APPROACH
+
+- Find the module which could manage the entity in question
+- Observe the usage documentation and learn about the parameters and examples
+- Determine the desired state  
+- Determine the parameters to use and the values to assign
+
+
+	ansible prod -s -m group -a "name=admin gid=7045 state=present"
+
+#
+
+	lb | SUCCESS => {
+	     "changed": true,
+	     "gid": 7045,
+	     "name": "admin",
+	     "state": "present",
+	     "system": false 
+	} 
+	app1 | SUCCESS => {
+	     "changed": true,
+	     "gid": 7045,
+	     "name": "admin", 
+	     "state": "present",
+	     "system": false 
+	} 
+	db | SUCCESS => { 
+	    "changed": true,
+	     "gid": 7045,
+	     "name": "admin",
+	     "state": "present",
+	     "system": false
+	 } 
+	app2 | SUCCESS => {
+	     "changed": true,
+	     "gid": 7045,
+	     "name": "admin",
+	     "state": "present",
+	     "system": false 
+	}
+
+#
+
+	module :  group  
+	state = present  
+	gid = 7045  
+	host pattern = prod  
+	name = admin
+
+#### Problem Statement  2
+
+- on all prod servers
+- except for db hosts
+- whose name is **"abc"** 
+- whose uid  is **"7001"** 
+- who belongs to **admin** 
+- group who has a home directory
+
+#
+
+	module=user
+	name=abc
+	stae=present
+	uid=7001
+	group=admin
+	host pattern='prod:!db'
+
+	http://docs.ansible.com/ansible/user_module.html
+
+#
+
+	ansible 'prod:!db' -s -m user -a "name=abc uid=7001 group=admin state=present"
+
+#
+
+	app2 | SUCCESS => {
+	     "changed": true,
+	     "comment": "",
+	     "createhome": true,
+	     "group": 7045,
+	     "home": "/home/abc",
+	     "name": "abc",
+	     "shell": "/bin/bash",
+	     "state": "present",
+	     "system": false,
+	     "uid": 7001 
+	} 
+	lb | SUCCESS => {
+	     "changed": true,
+	     "comment": "",
+	     "createhome": true,
+	     "group": 7045,
+	     "home": "/home/abc",
+	     "name": "abc",
+	     "shell": "/bin/bash",
+	     "state": "present",
+	     "system": false,
+	     "uid": 7001 
+	} 
+	app1 | SUCCESS => {
+	     "changed": true,
+	     "comment": "",
+	     "createhome": true,
+	     "group": 7045,
+	     "home": "/home/abc", 
+	     "name": "abc",
+	     "shell": "/bin/bash",
+	     "state": "present",
+	     "system": false,
+	     "uid": 7001 
+	}
+#
+
+	module=user
+	name=abc
+	state=present
+	uid=7001
+	group=admin
+	host pattern='prod:!db'	
+
+	
+
+
+	
