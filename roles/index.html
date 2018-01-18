@@ -253,16 +253,21 @@
 <li>To install apache, Create <strong>roles/apache/tasks/install.yml</strong></li>
 </ul>
 <pre><code>---
-- name: Install Apache...
-  yum: name=httpd state=latest
+  - name: install apache web server
+    yum:
+      name: httpd
+      state: installed
 </code></pre>
 
 <ul>
 <li>To start the service, create  <strong>roles/apache/tasks/service.yml</strong> with the following content  </li>
 </ul>
 <pre><code>---
-- name: Starting Apache...
-  service: name=httpd state=started
+  - name: start apache webserver
+    service:
+      name: httpd
+      state: started
+      enabled: true
 </code></pre>
 
 <p>To have these tasks being called, include them into main task.</p>
@@ -271,8 +276,8 @@
 </ul>
 <pre><code>---
 # tasks file for apache
-- include: install.yml
-- include: service.yml
+  - import_tasks: install.yml
+  - import_tasks: service.yml
 </code></pre>
 
 <h3 id="create-a-role-to-install-php">Create a role to install php</h3>
@@ -295,8 +300,7 @@
 <p>file: roles/php/tasks/main.yml</p>
 <pre><code>---
 # tasks file for php
-- include: install.yml
-- include: service.yml
+- import_tasks: install.yml
 </code></pre>
 
 <h4 id="adding-notifications-and-handlers">Adding Notifications and Handlers</h4>
@@ -310,7 +314,6 @@
   with_items:
     - php
     - php-mysql
-    - nmap
   notify: Restart apache service
 
 </code></pre>
@@ -319,8 +322,11 @@
 <li>Create the notification handler by updating   <strong>roles/apache/handlers/main.yml</strong>  </li>
 </ul>
 <pre><code>---
-- name: Restart apache service
-  service: name=httpd state=restarted
+# handlers file for apache
+  - name: Restart apache service
+    service:
+      name: httpd
+      state: restarted
 </code></pre>
 
 <h3 id="create-and-apply-playbook-to-configure-app-servers">Create and apply playbook to configure app servers</h3>
