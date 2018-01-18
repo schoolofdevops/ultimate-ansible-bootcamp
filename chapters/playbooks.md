@@ -2,22 +2,17 @@
 
 In this tutorial we are going to create a simple playbook to add system users, install and start ntp service and some basic utilities.
 
-## Anatomy of a Playbook
-
-## YAML - The Language to write Playbooks
-
-
-## Writing and executing our first Playbook
 
 **Problem Statement**  
 
 You have to create a playbook to configure all linux  systems  which will  
+
   * create a admin user with uid 5001
   * remove  user dojo
   * install tree  utility
   * install ntp
 
-on all systems which belong to  prod group in the inventory
+on all systems which belong to  **prod** group in the inventory
 
 To prepare for this chapter, lets switch the directory in the workspace,
 
@@ -30,10 +25,10 @@ cd  chap5
 
 
 
-  * Edit environments/prod if required and comment the hosts which are absent.
+  * Edit **environments/prod** if required and comment the hosts which are absent.
 
 
-  * Create a new file with name *systems.yml* and add the following content to it
+  * Create a new file with name **systems.yml** and add the following content to it
 
 ```
 ---
@@ -352,9 +347,9 @@ PLAY RECAP *********************************************************************
 ```
 
 
-## Exercise:
+## Exercises:
 
-### **Exercise1**: Create a Playbook with the following specifications,  
+### **Nano Project**: Create a Playbook with the following specifications,  
 
   * It should apply only on local host (ansible host)
   * Should use become method
@@ -365,7 +360,7 @@ PLAY RECAP *********************************************************************
     * Deploy Path : /usr/share/nginx/html/app
  * Once deployed, validate the site by visting http://CONTROL_HOST_IP/app
 
-### **Exercise 2**: Disable Facts Gathering  
+### **Exercise**: Disable Facts Gathering  
 
   * Run ansible playbook and observe the output
   * Add the following configuration parameter to ansible.cfg

@@ -58,148 +58,156 @@ ansible db -m setup -a "filter=ansible_distribution"
 }  
 ```
 
-## Creating Templates for Apache
+## Defining release versions with vars
 
-* Create template for apache configuration    
-* This template will change **port number**, **document root** and **index.html** for  apache server    
-* Copy **httpd.conf** file from **roles/apache/files/** to **roles/apache/templates**    
+Currently, while deploying the application, the versions of the artifacts as well as release directories are defined statically. This should change to vars so that the version can be defined from one place, and dynamically so.
 
-```
-cp roles/apache/files/httpd.conf roles/apache/templates/httpd.conf.j2
-```
+Define the default vars
 
-* Change your working directory to templates
-
-```
-cd roles/apache/templates
-```
-
-* Change values of following  parameters by using template variables in **httpd.conf.j2**  
-  * Listen
-  * DocumentRoot
-  * DirectoryIndex
-
-Following code depicts only the parameters changed. Rest of the configurations in *httpd.conf.j2* remain as is
-
-```
-Listen {{ apache_port }}
-DocumentRoot "{{ custom_root }}"
-DirectoryIndex {{ apache_index }} index.html.var
-```
-
-* Create a template for index.html as well
-
-```
-cp roles/apache/files/index.html roles/apache/templates/index.html.j2
-```
-
-* Add the following contents to index.html.j2
-
-```
-<html>
-<body>
-  <h1>  Welcome to Ansible training! </h1>
-
-  <h2> SYSTEM INFO </h2>
-  <h4>  ========================= </h4>
-  <h3> Operating System : {{ ansible_distribution }} </h3>
-  <h3> IP Address : {{ ansible_eth0['ipv4']['address'] }} </h3>
-
-  <h2>  My Favourites </h2>
-  <h4>  ========================= </h4>
-
-  <h3> color     : {{ fav['color'] }} </h3>
-  <h3> fruit     : {{ fav['fruit']   }} </h3>
-  <h3> car       : {{ fav['car']   }} </h3>
-  <h3> laptop    : {{ fav['laptop']   }} </h3>
-  <h4>  ========================= </h4>
-
-</body>
-</html>
-
-```
-
-### Defining Default Variables
-
-* Define values of the variables used in the templates above.  The default values are defined in *roles/apache/defaults/main.yml* . Lets edit that file and add the following,
-
-```
-apache_port: 80
-custom_root: /var/www/html
-apache_index: index.html
-fav:
-  color: white
-  car: fiat
-  laptop: dell
-  fruit: apple
-```
-
-### Updating Tasks to use Templates
-
-* Since we are now using template instead of static file, we need to edit *roles/apache/tasks/config.yml* file and use template module
-* Replace **copy** module with **template** modules as follows,
-
+file: roles/frontend/defaults/main.yml
 ```
 ---
-- name: Creating configuration from templates...
-  template: >
-    src=httpd.conf.j2
-    dest=/etc/httpd.conf
-    owner=root
-    group=root
-    mode=0644
-  notify: Restart apache service
-
-- name: Copying index.html file...
-  template: >
-    src=index.html.j2
-    dest=/var/www/html/index.html
-    mode=0777
+# defaults file for frontend
+  app:
+    version: 1.5
 
 ```
 
-* Delete httpd.conf and index.html in files directory
+Update tasks to use the var defined above,
+
+file: roles/frontend/tasks/main.yml
 
 ```
-  rm roles/apache/files/httpd.conf
-  rm roles/apache/files/index.html
+- name: Download and extract the release
+  unarchive:
+    src: https://github.com/devopsdemoapps/devops-demo-app/archive/{{ app.version }}.tar.gz
+    dest: /opt/app/release
+    owner: apache
+    group: apache
+    creates: /opt/app/release/devops-demo-app-{{ app.version }}
+    remote_src: yes
+
+- name: create a symlink
+  file:
+    src: /opt/app/release/devops-demo-app-{{ app.version }}
+    dest: /var/www/html/app
+    owner: apache
+    group: apache
+    state: link
 ```
 
-### Validating
+**Try This**:
+  * Run playbook and check whether the above code works
+  * Change the version e.g. 1.4 and check if it has any effect
 
-* Let's test this template in action
+
+## Creating  application configurations dynamically
+
+Application configs are defined with **config.ini** file.  The version of config.ini as shipped with the application is as follows,
 
 ```
-ansible-playbook app.yml
+[database]
+hostname = DBHOST
+username = SQLUSER
+password = SQLPASSWORD
+dbname = SQLDBNAME
+
+[environment]
+environment = ENVNAME
+
+[prefs]
+color  = white
+fruit  = apple
+car    = fiat
+laptop = dell
 ```
 
-[Output]
+You should be able to customize these configs. In order to do that, you need to do split this into 2 things as follows,
+
+  * **vars** which define the actual properties and allow you to change it from different places
+  * a **jinja2 template** which will collect and process the vars on the fly and create the resulting configs dynamically
+
+
+### Defining the vars for app config  
+
+file: roles/frontend/defaults/main.yml
+```
+---
+# defaults file for frontend
+  app:
+    version: 1.5
+    env: LOCALDEV
+
+  fav:
+    color: white
+    fruit: orange
+    car: chevy
+    laptop: toshiba
+
+  dbconn:
+    host: localhost
+    user: root
+    pass: changeme
+    db: devopsdemo
+```
+
+Create directory and template file.  You could either use the commands below or directly create it from the graphical editor.
 
 ```
-PLAY [Playbook to configure App Servers] ***************************************
-
-TASK [setup] *******************************************************************
-ok: [192.168.61.13]
-ok: [192.168.61.12]
-
-.....
-
-RUNNING HANDLER [apache : Restart apache service] ******************************
-changed: [192.168.61.12]
-changed: [192.168.61.13]
-
-PLAY RECAP *********************************************************************
-192.168.61.12              : ok=11   changed=3    unreachable=0    failed=0
-192.168.61.13              : ok=11   changed=3    unreachable=0    failed=0
+cd roles/frontend
+mkdir templates
+touch templates/config.ini.j2
 ```
 
-## Variable Precedence in Action
+file: roles/frontend/templates/config.ini.j2  
+```
+
+[database]
+hostname = {{ dbconn['host'] }}
+username = {{ dbconn['user'] }}
+password = {{ dbconn['pass'] }}
+dbname = {{ dbconn['db'] }}
+
+[environment]
+environment = {{ app['env'] }}
+
+[prefs]
+color  = {{ fav['color'] }}
+fruit  = {{ fav['fruit'] }}
+car    = {{ fav['car'] }}
+laptop = {{ fav['laptop'] }}
+
+```
+
+### Adding task to generate  the  config from jinja2 template
+
+file: roles/frontend/tasks/main.yml ( append the following code to the file)
+
+```
+- name: add application configs
+  template:
+    src: config.ini.j2
+    dest: /var/www/html/app/config.ini
+    owner: apache
+    group: apache
+    mode: 0644
+```
+
+
+Now, run the playbook, reload the application page and validate. You should also check http://IPADDRESS:81/app/prefs.php to view if it prints the preferences you defined in the default vars.   
+
+```
+ansible-playbook  app.yml
+```
+
+
+## Beyond defaults - Playing with vars precedence
 
 Lets define the variables from couple of other places, to learn about the Precedence rules. We will create,
 * group_vars
 * playbook vars
 
-Since we are going to define the variables using multi level hashes, lets define the way hashes behave when defined from multiple places.
+Since we are going to define the variables using multi level hashes,  define the way hashes behave when defined from multiple places.
 
 Update chap7/ansible.cfg and add the following,
 
@@ -221,8 +229,8 @@ Edit **group_vars/prod.yml** file and add the following contents,
 ```
 ---
   fav:
-    color: blue
-    fruit: peach
+    color: yellow
+    fruit: guava
 ```
 
 Lets also add vars to playbook. Edit app.yml and add vars as below,
@@ -248,19 +256,19 @@ ansible-playbook app.yml
 If you view the content of the html file generated, you would notice the following,
 
 ```
-<h3> color     : blue </h3>
+<h3> color     : yellow </h3>
 <h3> fruit     : mango </h3>
-<h3> car       : fiat </h3>
-<h3> laptop    : dell </h3>
+<h3> car       : chevy </h3>
+<h3> laptop    : toshiba </h3>
 ```
 
 
 | fav item | role defaults     | group_vars     | playbook_vars |
 | :------------- | :------------- | :------------- | :------------- |
-| color | white | **blue** |   |
-| fruit | fiat      |  peach     | **mango** |
-| car | **fiat**       |        |  |
-| laptop | **apple**       |        |  |
+| color | white | **yellow** |   |
+| fruit | orange      |  guava     | **mango** |
+| car | **chevy**       |        |  |
+| laptop | **toshiba**       |        |  |
 
 * value of color comes from group_vars/all.yml
 * value of fruit comes from playbook vars

@@ -81,8 +81,10 @@ To begin with, in this part, we will install and start apache.
 
 ```
 ---
-- name: Install Apache...
-  yum: name=httpd state=latest
+  - name: install apache web server
+    yum:
+      name: httpd
+      state: installed
 ```  
 
 
@@ -90,8 +92,11 @@ To begin with, in this part, we will install and start apache.
 
 ```
 ---
-- name: Starting Apache...
-  service: name=httpd state=started
+  - name: start apache webserver
+    service:
+      name: httpd
+      state: started
+      enabled: true
 ```  
 
 
@@ -102,8 +107,8 @@ To have these tasks being called, include them into main task.
 ```
 ---
 # tasks file for apache
-- include: install.yml
-- include: service.yml
+  - import_tasks: install.yml
+  - import_tasks: service.yml
 ```
 
 ### Create a role to install php
@@ -130,8 +135,7 @@ file: roles/php/tasks/main.yml
 ```
 ---
 # tasks file for php
-- include: install.yml
-- include: service.yml
+- import_tasks: install.yml
 ```
 
 #### Adding Notifications and Handlers   
@@ -146,7 +150,6 @@ file: roles/php/tasks/main.yml
   with_items:
     - php
     - php-mysql
-    - nmap
   notify: Restart apache service
 
 ```  
@@ -157,8 +160,11 @@ file: roles/php/tasks/main.yml
 
 ```
 ---
-- name: Restart apache service
-  service: name=httpd state=restarted
+# handlers file for apache
+  - name: Restart apache service
+    service:
+      name: httpd
+      state: restarted
 ```  
 
 
@@ -325,8 +331,51 @@ PLAY RECAP *********************************************************************
 
 ## Exercises
 
+#### Nano Project: Deploy a PHP Application
+devops-demo-app is an application written in  PHP. You have already setup the environment above with apache and php roles, to deploy this application.  Your job is to write the ansible code to  deploy this application on app servers. This code will be in the form of a role.
 
-##### Nano Project: Create MySQL Role
+You have been tasked to create a **froentend**  role with the following specs,
+
+  * Pull release packages from the github release page as provided in the resources below. Releases are in the form of an archive.
+  * Multiple copies of releases will be maintained on the app servers for enabling rollbacks. To support this, every time to deploy a new version of the app, create a new directory for it inside the /opt/app
+```
+e.g.
+
+opt
+  | __ app
+         \__ release
+                 |
+                 |____ devops-demo-app-1.0
+                 |
+                 |____ devops-demo-app-1.1
+
+```
+
+
+  * Create  a symlink from the current version path to  **/var/www/html/app**
+
+
+
+```
+e.g.
+
+[root@app2 /]# ls -l /var/www/html/
+total 8
+lrwxrwxrwx 1 root root   36 Jan 16 13:28 app -> /opt/app/release/devops-demo-app-1.1
+
+```
+
+
+**Resources**:
+
+  * **PHP App Source** : https://github.com/devopsdemoapps/devops-demo-app
+  * **Releases**: https://github.com/devopsdemoapps/devops-demo-app/releases
+
+
+Once deployed, visiting  ![http://IADDRESS:81/app](http://IADDRESS:81/app) for app1 or with port 82 for (app2) should show the web app deployed.
+
+
+#### Nano Project: Create MySQL Role
   * Create a Role to install and configure MySQL server   
      *    Create role scaffold for mysql  using ansible-galaxy init  
      *   Create task to install "mysql-server" and "MySQL-python" packages using yum module   

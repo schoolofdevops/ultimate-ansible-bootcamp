@@ -28,8 +28,19 @@ log_path=~/ansible.log
 
 ## Creating Host Inventory
 
-Create a new file called *myhosts.ini* in the same directory.
+Since you are going to create a environment specific inventory,
+create a **environments** directory and a  file  inside it called *prod*
+
+```
+mkdir environments
+
+```
+Create inventory file
+
+file: environments/prod
+
 Let's create three groups as follows,
+
 
 ```
 [local]
@@ -43,7 +54,7 @@ app1
 app2
 
 
-[db]a
+[db]
 db
 
 [prod:children]
@@ -59,80 +70,6 @@ db
 
 The inventory file should look like below.
 
-## Setting up passwordless ssh access to inventory hosts
-
-### Generating ssh keypair on control host
-
-Now on control host, execute the following command
-
-```
-ssh-keygen -t rsa
-```
-
-Now press enter for the passphrase and other queries.
-
-```
-Generating public/private rsa key pair.
-Enter file in which to save the key (/root/.ssh/id_rsa):
-Created directory '/root/.ssh'.
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /root/.ssh/id_rsa.
-Your public key has been saved in /root/.ssh/id_rsa.pub.
-The key fingerprint is:
-c5:a5:6d:60:56:5a:7b:3c:60:23:b5:0f:1b:cf:f9:fd root@ansible
-The key's randomart image is:
-+--[ RSA 2048]----+
-|          =oO    |
-|         + X *   |
-|          = B +  |
-|         . . O o |
-|        S   . =  |
-|               ..|
-|                o|
-|                .|
-|                E|
-+-----------------+
-```
-
-### Copying public key to inventory hosts
-
-Copy public key of control node to other hosts
-
-```
-ssh-copy-id vagrant@192.168.61.11
-
-ssh-copy-id vagrant@192.168.61.12
-
-ssh-copy-id vagrant@192.168.61.13
-
-ssh-copy-id vagrant@192.168.61.14
-```
-
-See this example output to verify with your output
-
-```
-The authenticity of host '192.168.61.11 (192.168.61.11)' can't be established.
-RSA key fingerprint is 32:7f:ad:d7:da:63:32:b6:a9:ff:59:af:09:1e:56:22.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '192.168.61.11' (RSA) to the list of known hosts.
-```
-
-The password for user *vagrant* is *vagrant*
-
-### Validate the passwordless login
-
-Let us check the connection of control node with other hosts
-
-```
-ssh vagrant@192.168.61.11
-
-ssh vagrant@192.168.61.12
-
-ssh vagrant@192.168.61.13
-
-ssh vagrant@192.168.61.14
-```
 
 ### Ansible ping
 
@@ -146,19 +83,19 @@ ansible all -m ping
 [Output]
 
 ```
-192.168.61.13 | SUCCESS => {
+lb | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
-192.168.61.11 | SUCCESS => {
+app1 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
-192.168.61.12 | SUCCESS => {
+app2 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
-localhost | SUCCESS => {
+db | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }

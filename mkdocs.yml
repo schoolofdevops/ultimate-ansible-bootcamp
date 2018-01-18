@@ -1,14 +1,14 @@
 site_name: Ultimate Ansible Bootcamp
 pages:
   - Home: index.md
-  - Quick Dive:
-    - Ad Hoc Server Management: "ad-hoc.md"
-    - Modules - The Batteries Included: "modules.md"
-    - Learning to Write Infrastructure as a Code: "playbooks.md"
-    - Working with Roles: "roles.md"
+  - Bootcamp:
+    - Setting up the Environment: "setup.md"
+    - Getting started with Ansible : "ad-hoc.md"
+    - Writing Playbook for Base System Configurations: "playbooks.md"
+    - Configuring app server environment with Roles: "roles.md"
     - Variables and Templates: "templates_and_variables.md"
     - Control Structures: "control_structures.md"
-  - Deep Dive:
+  - Additional Topics :
     - Ansible Vault: "ansible-vault.md"
     - Ansible on Windows: "ansible-windows.md"
     - Ansible Pull: "ansible-pull.md"
@@ -18,4 +18,3 @@ pages:
     - Troubleshooting Techniques: "troubleshooting.md"
 docs_dir: chapters
 theme: readthedocs
-

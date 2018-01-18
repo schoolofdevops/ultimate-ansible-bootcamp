@@ -53,3 +53,7 @@ From Ansible Control node run the following command to enable repositories. This
   ansible db -s -a "cp -r /etc/yum.repos.d/repo.bkp/* /etc/yum.repos.d/"
 
 ```
+
+Notes:
+------
+  * for notifications its good to use config and service  
