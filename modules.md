@@ -60,17 +60,21 @@ Modules can also be called while writing tasks in **Playbook** using **YAML**
 	 state: present  
 
 **Output**
+
   	app1 | SUCCESS => { 
         "changed": false,
          "ping": "pong"
-     }  
+     }
+  
 #### FINDING INFO
 
 **ansible-doc** :- This utility helps you find list of modules, how to use those along with example snippets.
+
   	ansible-doc --help
  	ansible-doc --list | head
  	ansible-doc user
  	ansible-doc -s user  
+
 **Invoking A module**
  
 _Lets Invoke a Module for_  
@@ -118,9 +122,9 @@ _Lets Invoke a Module for_
 **Problem Statement 1** :-  
 
 **Create a group**  
-* on all prod servers 
-* whose name is "**admin**" 
-* whose gid is "**7045**"  
+* On all prod servers 
+* Whose name is "**admin**" 
+* Whose gid is "**7045**"  
 
 **Use this Command**
 
