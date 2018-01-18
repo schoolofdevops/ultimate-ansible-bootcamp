@@ -79,9 +79,11 @@ _Lets Invoke a Module for_
 * Whose OS is CentOS  
 
 **Running Ad-hoc Command** (Do not Run This)
+
   	ansible lb -s -a "yum install -y vim"  
 
 **Using Module**
+
   	ansible lb -s -m yum -a "name=vim state=present"
   
 ### Using Common Modules  
@@ -121,6 +123,7 @@ _Lets Invoke a Module for_
 * whose gid is "**7045**"  
 
 **Use this Command**
+
  	 	ansible prod -s -m group -a "name=admin gid=7045 state=present"   
 
 **Thus it states**:-  
@@ -141,6 +144,7 @@ _Lets Invoke a Module for_
 * Who has a home directory  
 
 **Use this Command**
+
   	ansible 'prod:!db' -s -m user -a "name=abc uid=7001 group=admin state=present"  
 
 **Thus it states**:-  
@@ -160,6 +164,7 @@ _Lets Invoke a Module for_
 * Whose permissions are set to 644  
 
 **Use this Command**
+
   	ansible app -m copy-a "src=test.txt dest=/tmp/test.txt mode=644"  
 
 **Thus it states**:-  
@@ -186,19 +191,23 @@ _Lets Invoke a Module for_
 ## GE  
 
 **Lets explore using command and shell modules**
+
   	ansible app -m command -a "free"
   	ansible app -m command -a "free | grep -i swap"
   	ansible app -m command -a "free" | grep -i swap
   	ansible app -m shell -a "free | grep -i swap"
 
 **Learn the difference between raw and shell**
+
   	ansible app -vvvv -m raw -a "free | grep -i swap"
   	ansible app -vvvv -m shell -a "free | grep -i swap"
 
 **Lets run a command to create a directory on remote nodes**
+
   	ansible app -m command -a "mkdir /tmp/dir1"  
 
 **Output**
+
 	ansible app -m command -a "mkdir /tmp/dir1"
 	app1 | SUCCESS | rc=0 >>
 	app2 | SUCCESS | rc=0 >> 
