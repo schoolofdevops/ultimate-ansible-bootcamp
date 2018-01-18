@@ -401,6 +401,16 @@
             "title": "Exercises"
         }, 
         {
+            "location": "/galaxy/", 
+            "text": "Setting up loadbalancer with a galaxy role\n\n\nansible-galaxy install geerlingguy.haproxy\n\n\n\n\nlb.yml\n\n\n- hosts: lb\n  become: yes\n  roles:\n    - { role: geerlingguy.haproxy }\n\n\n\n\n\nhttp://IPADDRESS/app\n\n\ngroup_vars/prod.yml\n\n\nhaproxy_backend_httpchk: ''\nhaproxy_backend_servers:\n  - name: app1\n    address: 192.168.61.12:80\n  - name: app2\n    address: 192.168.61.13:80\n\n\n\n\n\nhttp://IPADDRESS/app", 
+            "title": "Setting up Load Balancer"
+        }, 
+        {
+            "location": "/galaxy/#setting-up-loadbalancer-with-a-galaxy-role", 
+            "text": "ansible-galaxy install geerlingguy.haproxy  lb.yml  - hosts: lb\n  become: yes\n  roles:\n    - { role: geerlingguy.haproxy }  http://IPADDRESS/app  group_vars/prod.yml  haproxy_backend_httpchk: ''\nhaproxy_backend_servers:\n  - name: app1\n    address: 192.168.61.12:80\n  - name: app2\n    address: 192.168.61.13:80  http://IPADDRESS/app", 
+            "title": "Setting up loadbalancer with a galaxy role"
+        }, 
+        {
             "location": "/ansible-vault/", 
             "text": "Why to use Vault\n\n\n\n\nTo maintain sensitive data e.g. passwords/creds, keys etc.\n\n\nVersion control encrypted files instead of plain text\n\n\nansible-vault utility\n\n\n\n\nHowe ?\n\n\n\n\nUsed AES Cipher\n\n\nSymmetric Key\n\n\n\n\nWhat can be encrypted ?\n\n\n\n\nStructured data (yaml, json)\n\n\nVar files\n\n\ngroup_vars/hostvars\n\n\ninclude_vars or  var_files\n\n\nvar files passed at command line with \"-e @file\"\n\n\n\n\n\n\nTasks (however not very common)\n\n\nArbitory Files\n\n\n\n\nWhat can not be encrypted ?\n\n\n\n\nTemplates\n\n\n\n\nHow to encrypt/decrypt\n\n\n\n\nUsing --ask-vault-pass\n\n\nUsing --vault-password-file\n\n\n\n\nansible-vault Operations\n\n\n\n\nencrypt\n\n\ndecrypt\n\n\ncreate\n\n\nrekey\n\n\nedit\n\n\n\n\nRunning Playbooks with Vault\n\n\nansible-playbook site.yml --ask-vault-pass\nansible-playbook site.yml --vault-password-file ~/.vault_pass.txt\n\n\n\n\nAutomating Rekeying Process\n\n\n--new-vault-password-file=NEW_VAULT_PASSWORD_FILE\n\n\n\n\n\n                   new vault password file for rekey\n\n\n\nLab:\n\n\nansible-vault encrypt roles/mysql/defaults/main.yml\nansible-vault encrypt group_vars/all.yml\nansible-vault view group_vars/all.yml\nansible-playbook site.yml --ask-vault-pass", 
             "title": "Ansible Vault"
