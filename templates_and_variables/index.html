@@ -83,9 +83,11 @@
         
             <li><a class="toctree-l4" href="#variables">Variables</a></li>
         
-            <li><a class="toctree-l4" href="#creating-templates-for-apache">Creating Templates for Apache</a></li>
+            <li><a class="toctree-l4" href="#defining-release-versions-with-vars">Defining release versions with vars</a></li>
         
-            <li><a class="toctree-l4" href="#variable-precedence-in-action">Variable Precedence in Action</a></li>
+            <li><a class="toctree-l4" href="#creating-application-configurations-dynamically">Creating  application configurations dynamically</a></li>
+        
+            <li><a class="toctree-l4" href="#beyond-defaults-playing-with-vars-precedence">Beyond defaults - Playing with vars precedence</a></li>
         
             <li><a class="toctree-l4" href="#registered-variables">Registered  Variables</a></li>
         
@@ -230,139 +232,129 @@
 }  
 </code></pre>
 
-<h2 id="creating-templates-for-apache">Creating Templates for Apache</h2>
-<ul>
-<li>Create template for apache configuration    </li>
-<li>This template will change <strong>port number</strong>, <strong>document root</strong> and <strong>index.html</strong> for  apache server    </li>
-<li>Copy <strong>httpd.conf</strong> file from <strong>roles/apache/files/</strong> to <strong>roles/apache/templates</strong>    </li>
-</ul>
-<pre><code>cp roles/apache/files/httpd.conf roles/apache/templates/httpd.conf.j2
-</code></pre>
-
-<ul>
-<li>Change your working directory to templates</li>
-</ul>
-<pre><code>cd roles/apache/templates
-</code></pre>
-
-<ul>
-<li>Change values of following  parameters by using template variables in <strong>httpd.conf.j2</strong>  </li>
-<li>Listen</li>
-<li>DocumentRoot</li>
-<li>DirectoryIndex</li>
-</ul>
-<p>Following code depicts only the parameters changed. Rest of the configurations in <em>httpd.conf.j2</em> remain as is</p>
-<pre><code>Listen {{ apache_port }}
-DocumentRoot &quot;{{ custom_root }}&quot;
-DirectoryIndex {{ apache_index }} index.html.var
-</code></pre>
-
-<ul>
-<li>Create a template for index.html as well</li>
-</ul>
-<pre><code>cp roles/apache/files/index.html roles/apache/templates/index.html.j2
-</code></pre>
-
-<ul>
-<li>Add the following contents to index.html.j2</li>
-</ul>
-<pre><code>&lt;html&gt;
-&lt;body&gt;
-  &lt;h1&gt;  Welcome to Ansible training! &lt;/h1&gt;
-
-  &lt;h2&gt; SYSTEM INFO &lt;/h2&gt;
-  &lt;h4&gt;  ========================= &lt;/h4&gt;
-  &lt;h3&gt; Operating System : {{ ansible_distribution }} &lt;/h3&gt;
-  &lt;h3&gt; IP Address : {{ ansible_eth0['ipv4']['address'] }} &lt;/h3&gt;
-
-  &lt;h2&gt;  My Favourites &lt;/h2&gt;
-  &lt;h4&gt;  ========================= &lt;/h4&gt;
-
-  &lt;h3&gt; color     : {{ fav['color'] }} &lt;/h3&gt;
-  &lt;h3&gt; fruit     : {{ fav['fruit']   }} &lt;/h3&gt;
-  &lt;h3&gt; car       : {{ fav['car']   }} &lt;/h3&gt;
-  &lt;h3&gt; laptop    : {{ fav['laptop']   }} &lt;/h3&gt;
-  &lt;h4&gt;  ========================= &lt;/h4&gt;
-
-&lt;/body&gt;
-&lt;/html&gt;
-
-</code></pre>
-
-<h3 id="defining-default-variables">Defining Default Variables</h3>
-<ul>
-<li>Define values of the variables used in the templates above.  The default values are defined in <em>roles/apache/defaults/main.yml</em> . Lets edit that file and add the following,</li>
-</ul>
-<pre><code>apache_port: 80
-custom_root: /var/www/html
-apache_index: index.html
-fav:
-  color: white
-  car: fiat
-  laptop: dell
-  fruit: apple
-</code></pre>
-
-<h3 id="updating-tasks-to-use-templates">Updating Tasks to use Templates</h3>
-<ul>
-<li>Since we are now using template instead of static file, we need to edit <em>roles/apache/tasks/config.yml</em> file and use template module</li>
-<li>Replace <strong>copy</strong> module with <strong>template</strong> modules as follows,</li>
-</ul>
+<h2 id="defining-release-versions-with-vars">Defining release versions with vars</h2>
+<p>Currently, while deploying the application, the versions of the artifacts as well as release directories are defined statically. This should change to vars so that the version can be defined from one place, and dynamically so.</p>
+<p>Define the default vars</p>
+<p>file: roles/frontend/defaults/main.yml</p>
 <pre><code>---
-- name: Creating configuration from templates...
-  template: &gt;
-    src=httpd.conf.j2
-    dest=/etc/httpd.conf
-    owner=root
-    group=root
-    mode=0644
-  notify: Restart apache service
-
-- name: Copying index.html file...
-  template: &gt;
-    src=index.html.j2
-    dest=/var/www/html/index.html
-    mode=0777
+# defaults file for frontend
+  app:
+    version: 1.5
 
 </code></pre>
 
+<p>Update tasks to use the var defined above,</p>
+<p>file: roles/frontend/tasks/main.yml</p>
+<pre><code>- name: Download and extract the release
+  unarchive:
+    src: https://github.com/devopsdemoapps/devops-demo-app/archive/{{ app.version }}.tar.gz
+    dest: /opt/app/release
+    owner: apache
+    group: apache
+    creates: /opt/app/release/devops-demo-app-{{ app.version }}
+    remote_src: yes
+
+- name: create a symlink
+  file:
+    src: /opt/app/release/devops-demo-app-{{ app.version }}
+    dest: /var/www/html/app
+    owner: apache
+    group: apache
+    state: link
+</code></pre>
+
+<p><strong>Try This</strong>:
+  * Run playbook and check whether the above code works
+  * Change the version e.g. 1.4 and check if it has any effect</p>
+<h2 id="creating-application-configurations-dynamically">Creating  application configurations dynamically</h2>
+<p>Application configs are defined with <strong>config.ini</strong> file.  The version of config.ini as shipped with the application is as follows,</p>
+<pre><code>[database]
+hostname = DBHOST
+username = SQLUSER
+password = SQLPASSWORD
+dbname = SQLDBNAME
+
+[environment]
+environment = ENVNAME
+
+[prefs]
+color  = white
+fruit  = apple
+car    = fiat
+laptop = dell
+</code></pre>
+
+<p>You should be able to customize these configs. In order to do that, you need to do split this into 2 things as follows,</p>
 <ul>
-<li>Delete httpd.conf and index.html in files directory</li>
+<li><strong>vars</strong> which define the actual properties and allow you to change it from different places</li>
+<li>a <strong>jinja2 template</strong> which will collect and process the vars on the fly and create the resulting configs dynamically</li>
 </ul>
-<pre><code>  rm roles/apache/files/httpd.conf
-  rm roles/apache/files/index.html
+<h3 id="defining-the-vars-for-app-config">Defining the vars for app config</h3>
+<p>file: roles/frontend/defaults/main.yml</p>
+<pre><code>---
+# defaults file for frontend
+  app:
+    version: 1.5
+    env: LOCALDEV
+
+  fav:
+    color: white
+    fruit: orange
+    car: chevy
+    laptop: toshiba
+
+  dbconn:
+    host: localhost
+    user: root
+    pass: changeme
+    db: devopsdemo
 </code></pre>
 
-<h3 id="validating">Validating</h3>
-<ul>
-<li>Let's test this template in action</li>
-</ul>
-<pre><code>ansible-playbook app.yml
+<p>Create directory and template file.  You could either use the commands below or directly create it from the graphical editor.</p>
+<pre><code>cd roles/frontend
+mkdir templates
+touch templates/config.ini.j2
 </code></pre>
 
-<p>[Output]</p>
-<pre><code>PLAY [Playbook to configure App Servers] ***************************************
+<p>file: roles/frontend/templates/config.ini.j2  </p>
+<pre><code>
+[database]
+hostname = {{ dbconn['host'] }}
+username = {{ dbconn['user'] }}
+password = {{ dbconn['pass'] }}
+dbname = {{ dbconn['db'] }}
 
-TASK [setup] *******************************************************************
-ok: [192.168.61.13]
-ok: [192.168.61.12]
+[environment]
+environment = {{ app['env'] }}
 
-.....
+[prefs]
+color  = {{ fav['color'] }}
+fruit  = {{ fav['fruit'] }}
+car    = {{ fav['car'] }}
+laptop = {{ fav['laptop'] }}
 
-RUNNING HANDLER [apache : Restart apache service] ******************************
-changed: [192.168.61.12]
-changed: [192.168.61.13]
-
-PLAY RECAP *********************************************************************
-192.168.61.12              : ok=11   changed=3    unreachable=0    failed=0
-192.168.61.13              : ok=11   changed=3    unreachable=0    failed=0
 </code></pre>
 
-<h2 id="variable-precedence-in-action">Variable Precedence in Action</h2>
+<h3 id="adding-task-to-generate-the-config-from-jinja2-template">Adding task to generate  the  config from jinja2 template</h3>
+<p>file: roles/frontend/tasks/main.yml ( append the following code to the file)</p>
+<pre><code>- name: add application configs
+  template:
+    src: config.ini.j2
+    dest: /var/www/html/app/config.ini
+    owner: apache
+    group: apache
+    mode: 0644
+</code></pre>
+
+<p>Now, run the playbook, reload the application page and validate. You should also check http://IPADDRESS:81/app/prefs.php to view if it prints the preferences you defined in the default vars.   </p>
+<pre><code>ansible-playbook  app.yml
+</code></pre>
+
+<h2 id="beyond-defaults-playing-with-vars-precedence">Beyond defaults - Playing with vars precedence</h2>
 <p>Lets define the variables from couple of other places, to learn about the Precedence rules. We will create,
 <em> group_vars
 </em> playbook vars</p>
-<p>Since we are going to define the variables using multi level hashes, lets define the way hashes behave when defined from multiple places.</p>
+<p>Since we are going to define the variables using multi level hashes,  define the way hashes behave when defined from multiple places.</p>
 <p>Update chap7/ansible.cfg and add the following,</p>
 <pre><code>hash_behaviour=merge
 </code></pre>
@@ -377,8 +369,8 @@ touch prod.yml
 <p>Edit <strong>group_vars/prod.yml</strong> file and add the following contents,</p>
 <pre><code>---
   fav:
-    color: blue
-    fruit: peach
+    color: yellow
+    fruit: guava
 </code></pre>
 
 <p>Lets also add vars to playbook. Edit app.yml and add vars as below,</p>
@@ -398,10 +390,10 @@ touch prod.yml
 </code></pre>
 
 <p>If you view the content of the html file generated, you would notice the following,</p>
-<pre><code>&lt;h3&gt; color     : blue &lt;/h3&gt;
+<pre><code>&lt;h3&gt; color     : yellow &lt;/h3&gt;
 &lt;h3&gt; fruit     : mango &lt;/h3&gt;
-&lt;h3&gt; car       : fiat &lt;/h3&gt;
-&lt;h3&gt; laptop    : dell &lt;/h3&gt;
+&lt;h3&gt; car       : chevy &lt;/h3&gt;
+&lt;h3&gt; laptop    : toshiba &lt;/h3&gt;
 </code></pre>
 
 <table>
@@ -417,24 +409,24 @@ touch prod.yml
 <tr>
 <td align="left">color</td>
 <td align="left">white</td>
-<td align="left"><strong>blue</strong></td>
+<td align="left"><strong>yellow</strong></td>
 <td align="left"></td>
 </tr>
 <tr>
 <td align="left">fruit</td>
-<td align="left">fiat</td>
-<td align="left">peach</td>
+<td align="left">orange</td>
+<td align="left">guava</td>
 <td align="left"><strong>mango</strong></td>
 </tr>
 <tr>
 <td align="left">car</td>
-<td align="left"><strong>fiat</strong></td>
+<td align="left"><strong>chevy</strong></td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr>
 <td align="left">laptop</td>
-<td align="left"><strong>apple</strong></td>
+<td align="left"><strong>toshiba</strong></td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
