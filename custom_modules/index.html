@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Registered Variable - Ultimate Ansible Bootcamp</title>
+  <title>Custom Module - Ultimate Ansible Bootcamp</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Registered Variable";
-    var mkdocs_page_input_path = "registered_variables.md";
-    var mkdocs_page_url = "/registered_variables/";
+    var mkdocs_page_name = "Custom Module";
+    var mkdocs_page_input_path = "custom_modules.md";
+    var mkdocs_page_url = "/custom_modules/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -111,16 +111,27 @@
                     
     <a class="" href="../ansible-pull/">Ansible Tower</a>
                 </li>
-                <li class=" current">
-                    
-    <a class="current" href="./">Registered Variable</a>
-    <ul class="subnav">
-            
-    </ul>
-                </li>
                 <li class="">
                     
-    <a class="" href="../custom_modules/">Custom Module</a>
+    <a class="" href="../registered_variables/">Registered Variable</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Custom Module</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#creating-a-custiom-modules">Creating a custiom Modules</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#writing-module-with-bash">Writing module with bash</a></li>
+        
+            <li><a class="toctree-l4" href="#accepting-module-options">Accepting module options</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -162,7 +173,7 @@
         
       
     
-    <li>Registered Variable</li>
+    <li>Custom Module</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -172,43 +183,99 @@
           <div role="main">
             <div class="section">
               
-                <p>(src: http://docs.ansible.com/ansible/test_strategies.html)</p>
-<p>tasks:</p>
-<ul>
-<li>
-<p>action: uri url=http://www.example.com return_content=yes
-    register: webpage</p>
-</li>
-<li>
-<p>fail: msg='service is not happy'
-    when: "'AWESOME' not in webpage.content"</p>
-</li>
-</ul>
-<p>tasks:</p>
-<ul>
-<li>
-<p>shell: /usr/bin/some-command --parameter value
-     register: cmd_result</p>
-</li>
-<li>
-<p>assert:
-       that:
-         - "'not ready' not in cmd_result.stderr"
-         - "'gizmo enabled' in cmd_result.stdout"</p>
-</li>
-</ul>
-<p>tasks:</p>
-<ul>
-<li>
-<p>stat: path=/path/to/something
-     register: p</p>
-</li>
-<li>
-<p>assert:
-       that:
-         - p.stat.exists and p.stat.isdir    </p>
-</li>
-</ul>
+                <h1 id="creating-a-custiom-modules">Creating a custiom Modules</h1>
+<h2 id="writing-module-with-bash">Writing module with bash</h2>
+<pre><code>mkdir library
+touch library/mymodule
+</code></pre>
+
+<p>file: library/mymodule</p>
+<pre><code>#!/bin/bash
+
+display=&quot;This is a simple bash module..&quot;
+
+echo -e &quot;{\&quot;message\&quot;:\&quot;&quot;$display&quot;\&quot;}&quot;
+
+</code></pre>
+
+<p>file: custom_modules.yml</p>
+<pre><code>---
+- hosts: local
+  sudo: yes
+  tasks:
+   - name: test custom module
+     mymodule:
+     register: uptime
+
+   - debug: var=uptime
+</code></pre>
+
+<p>Test</p>
+<pre><code>ansible-playbook custom_module.yml
+</code></pre>
+
+<h2 id="accepting-module-options">Accepting module options</h2>
+<p>file: custom_modules.yml</p>
+<pre><code>- name: check version
+  printversion:
+    app: java
+    appv: 3.4
+  register: printversion
+
+- debug: var=printversion
+</code></pre>
+
+<p>file: library/printversion</p>
+<pre><code>#!/bin/bash
+#
+# This script accepts two inputs
+# 1. app
+# 2. appv
+# and prints it as a message
+
+changed=&quot;false&quot;
+
+source $1
+
+display=&quot;Received app  $app with version as $appv&quot;
+
+
+
+if [ &quot;$app&quot; == &quot;python&quot; ]; then
+  changed=&quot;true&quot;
+fi
+
+printf '{&quot;changed&quot;: %s, &quot;msg&quot;: &quot;%s&quot;}' &quot;$changed&quot; &quot;$display&quot;
+
+exit 0
+
+</code></pre>
+
+<p>Test</p>
+<pre><code>ansible-playbook custom_module.yml
+</code></pre>
+
+<h3 id="trying-out-sample-python-module">Trying out sample python module</h3>
+<pre><code>cd library
+wget -c https://gist.githubusercontent.com/initcron/88049b4fc3cbf4c53d17405efdd3a720/raw/fd2a4bccbe8fa895e3f6a6b517ec74abd1844df5/my_new_test_module
+</code></pre>
+
+<p>file: custom_modules.yml</p>
+<pre><code>- name: run the new module
+  my_new_test_module:
+    name: 'hello'
+    new: true
+  register: testout
+
+- name: dump test output
+  debug:
+    msg: '{{ testout }}'
+
+</code></pre>
+
+<p>Test</p>
+<pre><code>ansible-playbook custom_module.yml
+</code></pre>
               
             </div>
           </div>
@@ -216,10 +283,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../custom_modules/" class="btn btn-neutral float-right" title="Custom Module">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../troubleshooting/" class="btn btn-neutral float-right" title="Troubleshooting Techniques">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../ansible-pull/" class="btn btn-neutral" title="Ansible Tower"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../registered_variables/" class="btn btn-neutral" title="Registered Variable"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -245,10 +312,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../ansible-pull/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../registered_variables/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../custom_modules/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../troubleshooting/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

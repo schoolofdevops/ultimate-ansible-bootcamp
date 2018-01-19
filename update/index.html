@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Registered Variable - Ultimate Ansible Bootcamp</title>
+  <title>Setting up Zero Downtime Deployment - Ultimate Ansible Bootcamp</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Registered Variable";
-    var mkdocs_page_input_path = "registered_variables.md";
-    var mkdocs_page_url = "/registered_variables/";
+    var mkdocs_page_name = "Setting up Zero Downtime Deployment";
+    var mkdocs_page_input_path = "update.yml";
+    var mkdocs_page_url = "/update/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -84,9 +84,15 @@
                     
     <a class="" href="../galaxy/">Setting up Load Balancer</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../update/">Setting up Zero Downtime Deployment</a>
+    <a class="current" href="./">Setting up Zero Downtime Deployment</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#updating-application">Updating Application</a></li>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -111,12 +117,9 @@
                     
     <a class="" href="../ansible-pull/">Ansible Tower</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Registered Variable</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="../registered_variables/">Registered Variable</a>
                 </li>
                 <li class="">
                     
@@ -158,11 +161,11 @@
     
       
         
-          <li>Additional Topics &raquo;</li>
+          <li>Bootcamp &raquo;</li>
         
       
     
-    <li>Registered Variable</li>
+    <li>Setting up Zero Downtime Deployment</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -172,43 +175,54 @@
           <div role="main">
             <div class="section">
               
-                <p>(src: http://docs.ansible.com/ansible/test_strategies.html)</p>
-<p>tasks:</p>
-<ul>
-<li>
-<p>action: uri url=http://www.example.com return_content=yes
-    register: webpage</p>
-</li>
-<li>
-<p>fail: msg='service is not happy'
-    when: "'AWESOME' not in webpage.content"</p>
-</li>
-</ul>
-<p>tasks:</p>
-<ul>
-<li>
-<p>shell: /usr/bin/some-command --parameter value
-     register: cmd_result</p>
-</li>
-<li>
-<p>assert:
-       that:
-         - "'not ready' not in cmd_result.stderr"
-         - "'gizmo enabled' in cmd_result.stdout"</p>
-</li>
-</ul>
-<p>tasks:</p>
-<ul>
-<li>
-<p>stat: path=/path/to/something
-     register: p</p>
-</li>
-<li>
-<p>assert:
-       that:
-         - p.stat.exists and p.stat.isdir    </p>
-</li>
-</ul>
+                <h1 id="updating-application">Updating Application</h1>
+<p>Configure haproxy socket</p>
+<p>file: group_vars/prod.yml</p>
+<pre><code>
+  haproxy_socket: /var/run/haproxy.sock
+
+</code></pre>
+
+<p>Install netcat on lb</p>
+<pre><code>ansible lb -b -m yum -a &quot;name=nc state=installed&quot;
+</code></pre>
+
+<p>Create update script</p>
+<p>file: update.yml</p>
+<pre><code>---
+# Playbook for updating web server in batches
+# filename: update.yml
+
+- hosts: app
+  become: yes
+  vars:
+    app:
+      version: 1.6
+  serial: 1
+
+  pre_tasks:
+    - name: take the app server out
+      haproxy:
+        host: '{{ inventory_hostname }}'
+        state: disabled
+      delegate_to: lb
+
+  roles:
+     - frontend
+
+  post_tasks:
+    - name: add server to loadbalancer
+      haproxy:
+        host: '{{ inventory_hostname }}'
+        state: enabled
+      delegate_to: lb
+
+</code></pre>
+
+<p>Deploy a new version with</p>
+<pre><code>ansible-playbook update.yml
+
+</code></pre>
               
             </div>
           </div>
@@ -216,10 +230,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../custom_modules/" class="btn btn-neutral float-right" title="Custom Module">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../ansible-vault/" class="btn btn-neutral float-right" title="Ansible Vault">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../ansible-pull/" class="btn btn-neutral" title="Ansible Tower"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../galaxy/" class="btn btn-neutral" title="Setting up Load Balancer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -245,10 +259,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../ansible-pull/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../galaxy/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../custom_modules/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../ansible-vault/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -411,6 +411,16 @@
             "title": "Setting up loadbalancer with a galaxy role"
         }, 
         {
+            "location": "/update/", 
+            "text": "Updating Application\n\n\nConfigure haproxy socket\n\n\nfile: group_vars/prod.yml\n\n\n\n  haproxy_socket: /var/run/haproxy.sock\n\n\n\n\n\nInstall netcat on lb\n\n\nansible lb -b -m yum -a \nname=nc state=installed\n\n\n\n\n\nCreate update script\n\n\nfile: update.yml\n\n\n---\n# Playbook for updating web server in batches\n# filename: update.yml\n\n- hosts: app\n  become: yes\n  vars:\n    app:\n      version: 1.6\n  serial: 1\n\n  pre_tasks:\n    - name: take the app server out\n      haproxy:\n        host: '{{ inventory_hostname }}'\n        state: disabled\n      delegate_to: lb\n\n  roles:\n     - frontend\n\n  post_tasks:\n    - name: add server to loadbalancer\n      haproxy:\n        host: '{{ inventory_hostname }}'\n        state: enabled\n      delegate_to: lb\n\n\n\n\n\nDeploy a new version with\n\n\nansible-playbook update.yml", 
+            "title": "Setting up Zero Downtime Deployment"
+        }, 
+        {
+            "location": "/update/#updating-application", 
+            "text": "Configure haproxy socket  file: group_vars/prod.yml  \n  haproxy_socket: /var/run/haproxy.sock  Install netcat on lb  ansible lb -b -m yum -a  name=nc state=installed   Create update script  file: update.yml  ---\n# Playbook for updating web server in batches\n# filename: update.yml\n\n- hosts: app\n  become: yes\n  vars:\n    app:\n      version: 1.6\n  serial: 1\n\n  pre_tasks:\n    - name: take the app server out\n      haproxy:\n        host: '{{ inventory_hostname }}'\n        state: disabled\n      delegate_to: lb\n\n  roles:\n     - frontend\n\n  post_tasks:\n    - name: add server to loadbalancer\n      haproxy:\n        host: '{{ inventory_hostname }}'\n        state: enabled\n      delegate_to: lb  Deploy a new version with  ansible-playbook update.yml", 
+            "title": "Updating Application"
+        }, 
+        {
             "location": "/ansible-vault/", 
             "text": "Why to use Vault\n\n\n\n\nTo maintain sensitive data e.g. passwords/creds, keys etc.\n\n\nVersion control encrypted files instead of plain text\n\n\nansible-vault utility\n\n\n\n\nHowe ?\n\n\n\n\nUsed AES Cipher\n\n\nSymmetric Key\n\n\n\n\nWhat can be encrypted ?\n\n\n\n\nStructured data (yaml, json)\n\n\nVar files\n\n\ngroup_vars/hostvars\n\n\ninclude_vars or  var_files\n\n\nvar files passed at command line with \"-e @file\"\n\n\n\n\n\n\nTasks (however not very common)\n\n\nArbitory Files\n\n\n\n\nWhat can not be encrypted ?\n\n\n\n\nTemplates\n\n\n\n\nHow to encrypt/decrypt\n\n\n\n\nUsing --ask-vault-pass\n\n\nUsing --vault-password-file\n\n\n\n\nansible-vault Operations\n\n\n\n\nencrypt\n\n\ndecrypt\n\n\ncreate\n\n\nrekey\n\n\nedit\n\n\n\n\nRunning Playbooks with Vault\n\n\nansible-playbook site.yml --ask-vault-pass\nansible-playbook site.yml --vault-password-file ~/.vault_pass.txt\n\n\n\n\nAutomating Rekeying Process\n\n\n--new-vault-password-file=NEW_VAULT_PASSWORD_FILE\n\n\n\n\n\n                   new vault password file for rekey\n\n\n\nLab:\n\n\nansible-vault encrypt roles/mysql/defaults/main.yml\nansible-vault encrypt group_vars/all.yml\nansible-vault view group_vars/all.yml\nansible-playbook site.yml --ask-vault-pass", 
             "title": "Ansible Vault"
@@ -494,6 +504,31 @@
             "location": "/registered_variables/", 
             "text": "(src: http://docs.ansible.com/ansible/test_strategies.html)\n\n\ntasks:\n\n\n\n\n\n\naction: uri url=http://www.example.com return_content=yes\n    register: webpage\n\n\n\n\n\n\nfail: msg='service is not happy'\n    when: \"'AWESOME' not in webpage.content\"\n\n\n\n\n\n\ntasks:\n\n\n\n\n\n\nshell: /usr/bin/some-command --parameter value\n     register: cmd_result\n\n\n\n\n\n\nassert:\n       that:\n         - \"'not ready' not in cmd_result.stderr\"\n         - \"'gizmo enabled' in cmd_result.stdout\"\n\n\n\n\n\n\ntasks:\n\n\n\n\n\n\nstat: path=/path/to/something\n     register: p\n\n\n\n\n\n\nassert:\n       that:\n         - p.stat.exists and p.stat.isdir", 
             "title": "Registered Variable"
+        }, 
+        {
+            "location": "/custom_modules/", 
+            "text": "Creating a custiom Modules\n\n\nWriting module with bash\n\n\nmkdir library\ntouch library/mymodule\n\n\n\n\nfile: library/mymodule\n\n\n#!/bin/bash\n\ndisplay=\nThis is a simple bash module..\n\n\necho -e \n{\\\nmessage\\\n:\\\n$display\n\\\n}\n\n\n\n\n\n\nfile: custom_modules.yml\n\n\n---\n- hosts: local\n  sudo: yes\n  tasks:\n   - name: test custom module\n     mymodule:\n     register: uptime\n\n   - debug: var=uptime\n\n\n\n\nTest\n\n\nansible-playbook custom_module.yml\n\n\n\n\nAccepting module options\n\n\nfile: custom_modules.yml\n\n\n- name: check version\n  printversion:\n    app: java\n    appv: 3.4\n  register: printversion\n\n- debug: var=printversion\n\n\n\n\nfile: library/printversion\n\n\n#!/bin/bash\n#\n# This script accepts two inputs\n# 1. app\n# 2. appv\n# and prints it as a message\n\nchanged=\nfalse\n\n\nsource $1\n\ndisplay=\nReceived app  $app with version as $appv\n\n\n\n\nif [ \n$app\n == \npython\n ]; then\n  changed=\ntrue\n\nfi\n\nprintf '{\nchanged\n: %s, \nmsg\n: \n%s\n}' \n$changed\n \n$display\n\n\nexit 0\n\n\n\n\n\nTest\n\n\nansible-playbook custom_module.yml\n\n\n\n\nTrying out sample python module\n\n\ncd library\nwget -c https://gist.githubusercontent.com/initcron/88049b4fc3cbf4c53d17405efdd3a720/raw/fd2a4bccbe8fa895e3f6a6b517ec74abd1844df5/my_new_test_module\n\n\n\n\nfile: custom_modules.yml\n\n\n- name: run the new module\n  my_new_test_module:\n    name: 'hello'\n    new: true\n  register: testout\n\n- name: dump test output\n  debug:\n    msg: '{{ testout }}'\n\n\n\n\n\nTest\n\n\nansible-playbook custom_module.yml", 
+            "title": "Custom Module"
+        }, 
+        {
+            "location": "/custom_modules/#creating-a-custiom-modules", 
+            "text": "", 
+            "title": "Creating a custiom Modules"
+        }, 
+        {
+            "location": "/custom_modules/#writing-module-with-bash", 
+            "text": "mkdir library\ntouch library/mymodule  file: library/mymodule  #!/bin/bash\n\ndisplay= This is a simple bash module.. \n\necho -e  {\\ message\\ :\\ $display \\ }   file: custom_modules.yml  ---\n- hosts: local\n  sudo: yes\n  tasks:\n   - name: test custom module\n     mymodule:\n     register: uptime\n\n   - debug: var=uptime  Test  ansible-playbook custom_module.yml", 
+            "title": "Writing module with bash"
+        }, 
+        {
+            "location": "/custom_modules/#accepting-module-options", 
+            "text": "file: custom_modules.yml  - name: check version\n  printversion:\n    app: java\n    appv: 3.4\n  register: printversion\n\n- debug: var=printversion  file: library/printversion  #!/bin/bash\n#\n# This script accepts two inputs\n# 1. app\n# 2. appv\n# and prints it as a message\n\nchanged= false \n\nsource $1\n\ndisplay= Received app  $app with version as $appv \n\n\n\nif [  $app  ==  python  ]; then\n  changed= true \nfi\n\nprintf '{ changed : %s,  msg :  %s }'  $changed   $display \n\nexit 0  Test  ansible-playbook custom_module.yml", 
+            "title": "Accepting module options"
+        }, 
+        {
+            "location": "/custom_modules/#trying-out-sample-python-module", 
+            "text": "cd library\nwget -c https://gist.githubusercontent.com/initcron/88049b4fc3cbf4c53d17405efdd3a720/raw/fd2a4bccbe8fa895e3f6a6b517ec74abd1844df5/my_new_test_module  file: custom_modules.yml  - name: run the new module\n  my_new_test_module:\n    name: 'hello'\n    new: true\n  register: testout\n\n- name: dump test output\n  debug:\n    msg: '{{ testout }}'  Test  ansible-playbook custom_module.yml", 
+            "title": "Trying out sample python module"
         }, 
         {
             "location": "/troubleshooting/", 
