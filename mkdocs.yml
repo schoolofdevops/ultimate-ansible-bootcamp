@@ -3,17 +3,20 @@ pages:
   - Home: index.md
   - Bootcamp:
     - Setting up the Environment: "setup.md"
-    - Getting started with Ansible : "ad-hoc.md"
+    - Ad Hoc Server Maangement with Ansible: "ad-hoc.md"
     - Writing Playbook for Base System Configurations: "playbooks.md"
     - Configuring app server environment with Roles: "roles.md"
     - Variables and Templates: "templates_and_variables.md"
     - Control Structures: "control_structures.md"
+    - Setting up Load Balancer: "galaxy.md"
+    - Setting up Zero Downtime Deployment: "update.yml"
   - Additional Topics :
     - Ansible Vault: "ansible-vault.md"
     - Ansible on Windows: "ansible-windows.md"
     - Ansible Pull: "ansible-pull.md"
     - Ansible Tower: "ansible-pull.md"
     - Registered Variable: "registered_variables.md"
+    - Custom Module: "custom_modules.md"
   - Troubleshooting:
     - Troubleshooting Techniques: "troubleshooting.md"
 docs_dir: chapters
