@@ -371,8 +371,8 @@ PLAY RECAP *********************************************************************
 <li>Create the notification handler by updating   <strong>roles/apache/handlers/main.yml</strong>  </li>
 </ul>
 <pre><code>---
-- name: Restart apache service
- service: name=httpd state=restarted
+  - name: Restart apache service
+    service: name=httpd state=restarted
 </code></pre>
 
 <p>Update <strong>tasks/main.yml</strong> to call the newly created tasks file.</p>
@@ -473,7 +473,7 @@ dependencies:
 <pre><code>  ---
   # This is a sitewide playbook
   # filename: site.yml
-  - include: app.yml
+  - import_playbook: app.yml
 
 </code></pre>
 
@@ -533,7 +533,7 @@ PLAY RECAP *********************************************************************
 </code></pre>
 
 <h2 id="exercises">Exercises</h2>
-<h4 id="nano-project-deploy-a-php-application">Nano Project: Deploy a PHP Application</h4>
+<h3 id="nano-project-deploy-a-php-application">Nano Project: Deploy a PHP Application</h3>
 <p>devops-demo-app is an application written in  PHP. You have already setup the environment above with apache and php roles, to deploy this application.  Your job is to write the ansible code to  deploy this application on app servers. This code will be in the form of a role.</p>
 <p>You have been tasked to create a <strong>froentend</strong>  role with the following specs,</p>
 <ul>
@@ -569,19 +569,6 @@ lrwxrwxrwx 1 root root   36 Jan 16 13:28 app -&gt; /opt/app/release/devops-demo-
 <li><strong>Releases</strong>: https://github.com/devopsdemoapps/devops-demo-app/releases</li>
 </ul>
 <p>Once deployed, visiting  <img alt="http://IADDRESS:81/app" src="http://IADDRESS:81/app" /> for app1 or with port 82 for (app2) should show the web app deployed.</p>
-<h4 id="nano-project-create-mysql-role">Nano Project: Create MySQL Role</h4>
-<ul>
-<li>Create a Role to install and configure MySQL server   <ul>
-<li>Create role scaffold for mysql  using ansible-galaxy init  </li>
-<li>Create task to install "mysql-server" and "MySQL-python" packages using yum module   </li>
-<li>Create a task to start mysqld service   </li>
-<li>Manage my.cnf by creating a centralized copy in role and writing a task to copy it to all db hosts. Use helper/my.cnf as a reference. The destination for this file is /etv/my.cnf on db servers.</li>
-<li>Write a handler to restart the service on configuration change. Add a notification from the copy resource created earlier.</li>
-<li>Add a dependency on base role in the metadata for mysql role.  </li>
-<li>Create  <strong>db.yml</strong> playbook for configuring all database servers. Create definitions to configure <strong>db</strong> group and to apply <strong>mysql</strong> role.   </li>
-</ul>
-</li>
-</ul>
               
             </div>
           </div>
