@@ -81,13 +81,13 @@
         
             <li><a class="toctree-l4" href="#writing-tasks-to-install-and-start-apache-web-service">Writing Tasks to Install and Start  Apache Web Service</a></li>
         
-            <li><a class="toctree-l4" href="#create-a-role-to-install-php">Create a role to install php</a></li>
-        
             <li><a class="toctree-l4" href="#create-and-apply-playbook-to-configure-app-servers">Create and apply playbook to configure app servers</a></li>
         
-            <li><a class="toctree-l4" href="#systems-role-dependencies-and-nested-roles">Systems role, dependencies and nested roles</a></li>
+            <li><a class="toctree-l4" href="#managing-configurations">Managing Configurations</a></li>
         
-            <li><a class="toctree-l4" href="#creating-a-site-wide-playbook">Creating a Site Wide Playbook</a></li>
+            <li><a class="toctree-l4" href="#create-a-role-to-install-php">Create a role to install php</a></li>
+        
+            <li><a class="toctree-l4" href="#systems-role-dependencies-and-nested-roles">Systems role, dependencies and nested roles</a></li>
         
             <li><a class="toctree-l4" href="#exercises">Exercises</a></li>
         
@@ -199,8 +199,9 @@
 <p>apache role which will</p>
 <ul>
 <li>Install <strong>httpd</strong> package</li>
-<li>Start httpd service</li>
-<li>Add a handler to restart service</li>
+<li>configure <strong>httpd.conf</strong></li>
+<li>Start <strong>httpd</strong> service</li>
+<li>Add a <strong>handler</strong> to restart service</li>
 </ul>
 <p><strong>php</strong> role to</p>
 <ul>
@@ -292,55 +293,6 @@
   - import_tasks: service.yml
 </code></pre>
 
-<h3 id="create-a-role-to-install-php">Create a role to install php</h3>
-<p>Generate roles scaffold</p>
-<pre><code>ansible-galaxy init --offline --init-path=roles  php
-</code></pre>
-
-<p>roles/php/tasks/install.yml</p>
-<pre><code>---
-# install php related packages
-  - name: install php
-    package:
-      name: &quot;{{ item }}&quot;
-      state: installed
-    with_items:
-      - php
-      - php-mysql
-</code></pre>
-
-<p>file: roles/php/tasks/main.yml</p>
-<pre><code>---
-# tasks file for php
-- import_tasks: install.yml
-</code></pre>
-
-<h4 id="adding-notifications-and-handlers">Adding Notifications and Handlers</h4>
-<ul>
-<li>Previously we have create a task to install php related packages.  After install these packages, to make it effective, its important to restart apache web server. To achieve this,  update the task to send a notification to the handler created above to restart  apache.  You simply have to add the line below which starts with <strong>notify</strong></li>
-</ul>
-<pre><code>- name: install php
-  package:
-    name: &quot;{{ item }}&quot;
-    state: installed
-  with_items:
-    - php
-    - php-mysql
-  notify: Restart apache service
-
-</code></pre>
-
-<ul>
-<li>Create the notification handler by updating   <strong>roles/apache/handlers/main.yml</strong>  </li>
-</ul>
-<pre><code>---
-# handlers file for apache
-  - name: Restart apache service
-    service:
-      name: httpd
-      state: restarted
-</code></pre>
-
 <h3 id="create-and-apply-playbook-to-configure-app-servers">Create and apply playbook to configure app servers</h3>
 <ul>
 <li>Create a playbook for app servers <strong>app.yml</strong> with following contents</li>
@@ -350,7 +302,6 @@
     become: true
     roles:
       - apache
-      - php
 </code></pre>
 
 <ul>
@@ -379,7 +330,102 @@ PLAY RECAP *********************************************************************
 192.168.61.13              : ok=3    changed=2    unreachable=0    failed=0
 </code></pre>
 
-<h3 id="systems-role-dependencies-and-nested-roles">Systems role, dependencies and nested roles</h3>
+<h3 id="managing-configurations">Managing Configurations</h3>
+<ul>
+<li>Copy <strong>index.html</strong> and <strong>httpd.conf</strong> from <strong>chap6/helper</strong> to <strong>/roles/apache/files/</strong> directory    </li>
+</ul>
+<pre><code>   cd chap6
+   cp helper/httpd.conf roles/apache/files/  
+</code></pre>
+
+<ul>
+<li>Create a task file at <strong>roles/apache/tasks/config.yml</strong> to copy the configuration file.    </li>
+</ul>
+<pre><code>---
+  - name: copy over httpd configs
+    copy:
+      src: httpd.conf
+      dest: /etc/httpd.conf
+      owner: root
+      group: root
+      mode: 0644
+
+</code></pre>
+
+<h4 id="adding-notifications-and-handlers">Adding Notifications and Handlers</h4>
+<ul>
+<li>Previously we have create a task in roles/apache/tasks/config.yml to copy over httpd.conf to the app server. Update this file to send a notification to restart  service on configuration update.  You simply have to add the line which starts with <strong>notify</strong></li>
+</ul>
+<pre><code>---
+  - name: copy over httpd configs
+    copy:
+      src: httpd.conf
+      dest: /etc/httpd.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: Restart apache service
+</code></pre>
+
+<ul>
+<li>Create the notification handler by updating   <strong>roles/apache/handlers/main.yml</strong>  </li>
+</ul>
+<pre><code>---
+- name: Restart apache service
+ service: name=httpd state=restarted
+</code></pre>
+
+<p>Update <strong>tasks/main.yml</strong> to call the newly created tasks file.</p>
+<pre><code>---
+# tasks file for apache
+  - import_tasks: install.yml
+  - import_tasks: service.yml
+  - import_tasks: config.yml
+</code></pre>
+
+<p>Apply and validate if the configuration file is being copied and service restarted.</p>
+<pre><code> ansible-playbook app.yml
+</code></pre>
+
+<h2 id="create-a-role-to-install-php">Create a role to install php</h2>
+<p>Generate roles scaffold</p>
+<pre><code>ansible-galaxy init --offline --init-path=roles  php
+</code></pre>
+
+<p>roles/php/tasks/install.yml</p>
+<pre><code>---
+# install php related packages
+  - name: install php
+    package:
+      name: &quot;{{ item }}&quot;
+      state: installed
+    with_items:
+      - php
+      - php-mysql
+    notify: Restart apache service
+</code></pre>
+
+<p>file: roles/php/tasks/main.yml</p>
+<pre><code>---
+# tasks file for php
+- import_tasks: install.yml
+</code></pre>
+
+<p>Update <strong>app.yml</strong> playbook to invoke php role.</p>
+<p>file: app.yml</p>
+<pre><code>  ---
+  - hosts: app
+    become: true
+    roles:
+      - apache
+      - php
+</code></pre>
+
+<p>Apply the playbook</p>
+<pre><code>ansible-playbook app.yml
+</code></pre>
+
+<h2 id="systems-role-dependencies-and-nested-roles">Systems role, dependencies and nested roles</h2>
 <p>You have already written a playbook to define common systems configurations. Now, go ahead and refactor it so that instead of calling tasks from playbook itself, it goes into its own role, and then call on each server.</p>
 <ul>
 <li>Create a base role with ansible-galaxy utility,  </li>
