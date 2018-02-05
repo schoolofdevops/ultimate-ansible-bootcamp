@@ -18,7 +18,7 @@
   <script>
     // Current page data
     var mkdocs_page_name = "Setting up Zero Downtime Deployment";
-    var mkdocs_page_input_path = "update.yml";
+    var mkdocs_page_input_path = "update.md";
     var mkdocs_page_url = "/update/";
   </script>
   
@@ -98,6 +98,14 @@
     <ul class="subnav">
             
     <li class="toctree-l3"><a href="#updating-application">Updating Application</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#writing-database-schema-update-playbook">Writing database schema update playbook</a></li>
+        
+            <li><a class="toctree-l4" href="#deployment-playbook">Deployment Playbook</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -184,6 +192,83 @@
             <div class="section">
               
                 <h1 id="updating-application">Updating Application</h1>
+<h2 id="writing-database-schema-update-playbook">Writing database schema update playbook</h2>
+<p>The following url has the links to the database dumps
+https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
+<p>Lets write tasks to update schema for database</p>
+<pre><code>---
+  - name: playbook to configure db servers
+    hosts: db
+    become: yes
+    roles:
+      - { role: geerlingguy.mysql }
+    tasks:
+      - name: download database schema
+        get_url:
+          url: https://raw.githubusercontent.com/devopsdemoapps/devops-demo-app/master/data/devops-demo-1.0.sql
+          dest: /tmp/devops-demo-1.0.sql
+          mode: 0444
+        tags: schema
+
+      - name: Schema Migrate
+        mysql_db:
+          name: &quot;{{ dbconn.db }}&quot;
+          login_host: &quot;127.0.0.1&quot;
+          login_password: &quot;{{ mysql_root_password }}&quot;
+          login_user: &quot;root&quot;
+          state: import
+          target: /tmp/devops-demo-1.0.sql
+        tags: schema
+
+</code></pre>
+
+<p>where,
+  * we have added task to download the schema file from a remote uri
+  * load the schema using <strong>import</strong> state</p>
+<p>Its important to use <strong>1.0</strong> as the schema version first time you run as it needs the initial tables.</p>
+<p>Run it for the first time,</p>
+<pre><code>ansible-playbook db.yml  --vault-id prod@~/.vault_prod --tags=schema
+</code></pre>
+
+<p>Once the initial schema apply is done, update the tasks to use <strong>app.version</strong> for schema update as well</p>
+<pre><code>---
+  - name: playbook to configure db servers
+    hosts: db
+    become: yes
+    roles:
+      - { role: geerlingguy.mysql }
+    tasks:
+      - name: download database schema
+        get_url:
+          url: https://raw.githubusercontent.com/devopsdemoapps/devops-demo-app/master/data/devops-demo-{{ app.version }}.sql
+          dest: /tmp/devops-demo-{{ app.version }}.sql
+          mode: 0444
+        tags: schema
+
+      - name: Schema Migrate
+        mysql_db:
+          name: &quot;{{ dbconn.db }}&quot;
+          login_host: &quot;127.0.0.1&quot;
+          login_password: &quot;{{ mysql_root_password }}&quot;
+          login_user: &quot;root&quot;
+          state: import
+          target: /tmp/devops-demo-{{ app.version }}.sql
+        tags: schema
+
+</code></pre>
+
+<h2 id="deployment-playbook">Deployment Playbook</h2>
+<p>Strategy:
+  * Rolling updates/zero downtime
+  * Batch size = 1</p>
+<p>Deployment strategy and sequence,
+  * Update database schema
+  * For each web server update
+    * Disable load balancer traffic
+    * Deploy new version of the application
+    * Wait for the app to be available
+    * Enable traffic from load balancer</p>
+<h3 id="pre-tasks">Pre tasks</h3>
 <p>Configure haproxy socket</p>
 <p>file: group_vars/prod.yml</p>
 <pre><code>
