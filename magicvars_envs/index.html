@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Troubleshooting Techniques - Ultimate Ansible Bootcamp</title>
+  <title>Auto discovery and multi environments - Ultimate Ansible Bootcamp</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Troubleshooting Techniques";
-    var mkdocs_page_input_path = "troubleshooting.md";
-    var mkdocs_page_url = "/troubleshooting/";
+    var mkdocs_page_name = "Auto discovery and multi environments";
+    var mkdocs_page_input_path = "magicvars_envs.md";
+    var mkdocs_page_url = "/magicvars_envs/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -84,9 +84,15 @@
                     
     <a class="" href="../control_structures/">Controlling execution flow with conditionals, iterators and tags</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../magicvars_envs/">Auto discovery and multi environments</a>
+    <a class="current" href="./">Auto discovery and multi environments</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#placeholder">placeholder</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -134,12 +140,9 @@
 		
     <span class="caption-text">Troubleshooting</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Troubleshooting Techniques</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="../troubleshooting/">Troubleshooting Techniques</a>
                 </li>
     </ul>
 	    </li>
@@ -166,11 +169,11 @@
     
       
         
-          <li>Troubleshooting &raquo;</li>
+          <li>Bootcamp &raquo;</li>
         
       
     
-    <li>Troubleshooting Techniques</li>
+    <li>Auto discovery and multi environments</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -180,25 +183,7 @@
           <div role="main">
             <div class="section">
               
-                <p>Troubleshooting Techniques
-  * Using verbose mode
-  * Using --start-at-task
-  * Using --step
-  * Using debugger</p>
-<p>Verbose Mode
- -vvvv</p>
-<p>Debugger</p>
-<p>http://docs.ansible.com/ansible/playbooks_debugger.html</p>
-<p>Defining Failure
-failed_when: "'FAILED' in command_result.stderr"
-http://docs.ansible.com/ansible/playbooks_error_handling.html</p>
-<p>start-at-task
-ansible-playbook playbook.yml --start-at-task="install packages"</p>
-<p>Step
-Playbooks can also be executed interactively with --step:</p>
-<p>ansible-playbook playbook.yml --step
-This will cause ansible to stop on each t</p>
-<p>http://docs.ansible.com/ansible/playbooks_startnstep.html</p>
+                <h1 id="placeholder">placeholder</h1>
               
             </div>
           </div>
@@ -206,8 +191,10 @@ This will cause ansible to stop on each t</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../vault/" class="btn btn-neutral float-right" title="Encrypting sensitive data with Ansible Vault">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../custom_modules/" class="btn btn-neutral" title="Custom Module"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../control_structures/" class="btn btn-neutral" title="Controlling execution flow with conditionals, iterators and tags"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -233,8 +220,10 @@ This will cause ansible to stop on each t</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../custom_modules/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../control_structures/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../vault/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
