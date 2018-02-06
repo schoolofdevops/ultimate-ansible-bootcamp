@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,61 +13,61 @@
         
     <url>
      <loc>/setup/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ad-hoc/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/playbooks/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/roles/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/templates_and_variables/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/galaxy/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/control_structures/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/magicvars_envs/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/vault/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <loc>/ansible-vault/</loc>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/update/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -76,38 +76,38 @@
     
         
     <url>
-     <loc>/ansible-vault/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <loc>/dynamic_inventory/</loc>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ansible-windows/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ansible-pull/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ansible-pull/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/registered_variables/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/custom_modules/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -117,7 +117,7 @@
         
     <url>
      <loc>/troubleshooting/</loc>
-     <lastmod>2018-02-05</lastmod>
+     <lastmod>2018-02-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
