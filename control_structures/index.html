@@ -287,6 +287,22 @@
 <h2 id="refactoring-apache-playbook-to-add-support-for-ubuntu">Refactoring apache playbook to add support for Ubuntu</h2>
 <p>Conditionals structures allow Ansible to choose an alternate path. Ansible does this by using <em>when</em> statements</p>
 <p>When statement becomes helpful, when you will want to skip a particular step on a particular host</p>
+<h3 id="adding-app3">Adding app3</h3>
+<p>Now lets update the inventory to add <strong>app3</strong></p>
+<p>file: environments/prod</p>
+<pre><code>[app]
+app1
+app2
+app3 ansible_user=devops ansible_ssh_pass=codespaces
+
+</code></pre>
+
+<p>update package cache on app3</p>
+<pre><code>ansible app3 -m ping
+ansible app3 -b -a &quot;apt-get update&quot;
+
+</code></pre>
+
 <h3 id="selectively-calling-install-tasks-based-on-platform">Selectively calling install tasks based on platform</h3>
 <p>Current configuration tasks that we have written is compatible with RedHat platform. It may fail on others. Lets selectively call it based on the platform family.</p>
 <ul>
@@ -385,16 +401,8 @@
     state: restarted
 </code></pre>
 
-<p>Now lets update the inventory to add <strong>app3</strong></p>
-<p>file: environments/prod</p>
-<pre><code>[app]
-app1
-app2
-app3 ansible_user=devops ansible_ssh_pass=codespaces
-
-</code></pre>
-
-<p>and apply playbook</p>
+<p>You also need to make sure  systems role to use <strong>package</strong> instead of yum module.  </p>
+<p>apply playbook</p>
 <pre><code>ansible-playbook app.yml
 </code></pre>
 
