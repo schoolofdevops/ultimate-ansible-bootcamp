@@ -112,15 +112,15 @@
     
         <ul>
         
-            <li><a class="toctree-l4" href="#running-playbooks-with-vault">Running Playbooks with Vault</a></li>
+            <li><a class="toctree-l4" href="#examples">Examples</a></li>
         
         </ul>
     
 
-    <li class="toctree-l3"><a href="#automating-rekeying-process">Automating Rekeying Process</a></li>
+    <li class="toctree-l3"><a href="#lab-encrypting-and-decrypting-with-single-key">Lab : Encrypting and decrypting with single key</a></li>
     
 
-    <li class="toctree-l3"><a href="#new-vault">New Vault</a></li>
+    <li class="toctree-l3"><a href="#new-vault-multiple-vault-ids-and-encrypting-strings">New Vault: Multiple vault ids and encrypting strings</a></li>
     
 
     </ul>
@@ -232,6 +232,7 @@
 </li>
 <li>Tasks (however not very common)</li>
 <li>Arbitory Files</li>
+<li>Strings (newly added)</li>
 </ul>
 <h2 id="what-can-not-be-encrypted">What can not be encrypted ?</h2>
 <ul>
@@ -250,19 +251,20 @@
 <li>rekey</li>
 <li>edit</li>
 </ul>
-<h3 id="running-playbooks-with-vault">Running Playbooks with Vault</h3>
+<h3 id="examples">Examples</h3>
+<p>Running Playbooks with Vault</p>
 <pre><code>ansible-playbook site.yml --ask-vault-pass
 ansible-playbook site.yml --vault-password-file ~/.vault_pass.txt
 </code></pre>
 
-<h2 id="automating-rekeying-process">Automating Rekeying Process</h2>
+<p>Automating Rekeying Process</p>
 <pre><code>--new-vault-password-file=NEW_VAULT_PASSWORD_FILE
 
 </code></pre>
 
 <pre><code>                   new vault password file for rekey
 </code></pre>
-<p>Lab:</p>
+<h2 id="lab-encrypting-and-decrypting-with-single-key">Lab : Encrypting and decrypting with single key</h2>
 <pre><code>mkdir vault
 </code></pre>
 
@@ -313,7 +315,7 @@ ansible-playbook test_vault.yml --ask-vault-pass
 
 </code></pre>
 
-<h2 id="new-vault">New Vault</h2>
+<h2 id="new-vault-multiple-vault-ids-and-encrypting-strings">New Vault: Multiple vault ids and encrypting strings</h2>
 <p>create vault password file for vault id <strong>prod</strong></p>
 <p>file ~/.vault_prod</p>
 <pre><code>prodpassword
