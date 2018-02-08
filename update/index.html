@@ -196,6 +196,7 @@
 <p>The following url has the links to the database dumps
 https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
 <p>Lets write tasks to update schema for database</p>
+<p>file: db.yml</p>
 <pre><code>---
   - name: playbook to configure db servers
     hosts: db
@@ -269,22 +270,10 @@ https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
     * Wait for the app to be available
     * Enable traffic from load balancer</p>
 <h3 id="pre-tasks">Pre tasks</h3>
-<p>Configure haproxy socket</p>
-<p>file: group_vars/prod.yml</p>
-<pre><code>
-  haproxy_socket: /var/run/haproxy.sock
-
-</code></pre>
-
-<p>Install netcat on lb</p>
-<pre><code>ansible lb -b -m yum -a &quot;name=nc state=installed&quot;
-</code></pre>
-
-<p>Create update script</p>
-<p>file: update.yml</p>
+<p>file: deployment.yml</p>
 <pre><code>---
 # Playbook for updating web server in batches
-# filename: update.yml
+# filename: deplyoment.yml
 
 - hosts: app
   become: yes
@@ -313,7 +302,7 @@ https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
 </code></pre>
 
 <p>Deploy a new version with</p>
-<pre><code>ansible-playbook update.yml
+<pre><code>ansible-playbook deployment.yml
 
 </code></pre>
               

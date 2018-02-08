@@ -204,6 +204,7 @@
 <p>Change into /vagrant/code/chap3 directory on your ansible host. Create a file called ansible.cfg  Add  the following contents to the file.</p>
 <p>On Ansible Control node,</p>
 <pre><code>cd chap4
+ansible --version
 </code></pre>
 
 <p>Create <strong>ansible.cfg</strong> in chap4</p>
@@ -214,6 +215,11 @@ retry_files_save_path = /tmp
 host_key_checking = False
 log_path=~/ansible.log
 
+</code></pre>
+
+<p>Validate that your new configs are picked up,</p>
+<pre><code>ansible --version
+ansible-config dump
 </code></pre>
 
 <h2 id="creating-host-inventory">Creating Host Inventory</h2>

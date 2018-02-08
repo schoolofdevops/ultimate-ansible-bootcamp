@@ -120,6 +120,9 @@
     <li class="toctree-l3"><a href="#automating-rekeying-process">Automating Rekeying Process</a></li>
     
 
+    <li class="toctree-l3"><a href="#new-vault">New Vault</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -260,11 +263,81 @@ ansible-playbook site.yml --vault-password-file ~/.vault_pass.txt
 <pre><code>                   new vault password file for rekey
 </code></pre>
 <p>Lab:</p>
-<pre><code>ansible-vault encrypt roles/mysql/defaults/main.yml
-ansible-vault encrypt group_vars/all.yml
-ansible-vault view group_vars/all.yml
-ansible-playbook site.yml --ask-vault-pass
+<pre><code>mkdir vault
+</code></pre>
 
+<p>file: vault/api_keys</p>
+<pre><code>USER: devops
+API_KEY: GUIFEHR3485y384H78435YYF89GUW03RIUWFHI
+TOKEN: 8549JBHBHUPIYHSL602JHU
+</code></pre>
+
+<p>Encrypting file</p>
+<pre><code>cd vault
+ansible-vault encrypt api_keys
+cat api_keys
+ansible-vault view api_keys
+
+</code></pre>
+
+<p>write a playbook to use encrypted file</p>
+<p>file: test_vault.yml</p>
+<pre><code>---
+  - name: testing ansible vault
+    hosts: 'local:app'
+    become: true
+    tasks:
+      - name: copy a file containing api keys
+        copy:
+          src: vault/api_keys
+          dest: /root/.api_keys
+          owner: root
+          group: root
+          mode: 0400
+
+</code></pre>
+
+<p>apply</p>
+<pre><code>ansible-playbook test_vault.yml
+ansible-playbook test_vault.yml --ask-vault-pass
+
+</code></pre>
+
+<p>Using a password file</p>
+<p>file ~/.vault</p>
+<pre><code>password1
+</code></pre>
+
+<p>profile passowrd file</p>
+<pre><code>ansible-playbook test_vault.yml --vault-password-file ~/.vault
+
+</code></pre>
+
+<h2 id="new-vault">New Vault</h2>
+<p>create vault password file for vault id <strong>prod</strong></p>
+<p>file ~/.vault_prod</p>
+<pre><code>prodpassword
+</code></pre>
+
+<p>Create files to encrypt  </p>
+<p>file: creds</p>
+<pre><code>mysql_root_password: password```
+
+</code></pre>
+
+<p>create copies of it</p>
+<pre><code>cp creds staging
+cp creds prod
+</code></pre>
+
+<p>encrypt</p>
+<pre><code>ansible-vault encrypt creds
+ansible-vault encrypt staging --vault-id staging@prompt
+ansible-vault encrypt prod --vault-id prod@~/.vault_prod
+</code></pre>
+
+<p>creating individual vaules </p>
+<pre><code>ansible-vault encrypt_string --vault-id prod@~/.vault_prod 'password' --name 'mysql_root_password'
 </code></pre>
               
             </div>

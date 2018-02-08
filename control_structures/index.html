@@ -89,11 +89,9 @@
     
         <ul>
         
-            <li><a class="toctree-l4" href="#using-iterators">Using Iterators</a></li>
+            <li><a class="toctree-l4" href="#refactoring-systems-playbook">Refactoring systems playbook</a></li>
         
-            <li><a class="toctree-l4" href="#conditionals">Conditionals</a></li>
-        
-            <li><a class="toctree-l4" href="#when-statements">When statements</a></li>
+            <li><a class="toctree-l4" href="#refactoring-apache-playbook-to-add-support-for-ubuntu">Refactoring apache playbook to add support for Ubuntu</a></li>
         
             <li><a class="toctree-l4" href="#exercises">Exercises</a></li>
         
@@ -196,14 +194,15 @@
             <div class="section">
               
                 <h1 id="control-structures">Control Structures</h1>
-<p>In Chapter 7, we will learn about the aspects of conditionals and iterations that affects program's execution flow in Ansible<br />
-Control structures are of two different type</p>
+<p>In this chapter, we will learn about the aspects of ansible that can change the  execution flow. This includes,</p>
 <ul>
-<li>Conditional  </li>
-<li>Iterative  </li>
+<li>Iterators/loops  </li>
+<li>Conditionals</li>
+<li>Tags</li>
+<li>Conditional inclusions</li>
 </ul>
-<h2 id="using-iterators">Using Iterators</h2>
-<h3 id="iteration-over-list-of-items">Iteration over list of items</h3>
+<h2 id="refactoring-systems-playbook">Refactoring systems playbook</h2>
+<h3 id="iterating-over-a-list-of-items-to-install-packages">Iterating over a list of items to install packages</h3>
 <ul>
 <li>Create a list of packages  </li>
 <li>Let us create the following list of packages in base role.  </li>
@@ -232,7 +231,7 @@ Control structures are of two different type</p>
 <pre><code>  ansible-playbook app.yml
 </code></pre>
 
-<h3 id="iterating-over-a-hash-tabledictionary">Iterating over a Hash Table/Dictionary</h3>
+<h3 id="iterating-over-a-hash-tabledictionary-to-create-users">Iterating over a hash table/dictionary to create users</h3>
 <ul>
 <li>This iteration can be done with using <strong>with_dict</strong> statement, let us see how.</li>
 <li>Edit <em>group_vars/all</em> file from the <strong>parent directory</strong> and define a dictionary of systems  users to be managed</li>
@@ -267,7 +266,7 @@ Control structures are of two different type</p>
 <pre><code>ansible-playbook app.yml
 </code></pre>
 
-<h3 id="troubleshooting">Troubleshooting</h3>
+<h3 id="troubleshooting-setting-defaults">Troubleshooting : Setting defaults</h3>
 <p>The above playbook run fails as you have not defined all the fields for user <strong>dojo</strong> as part of the dictionary. You could either define it as part of vars, or better set defaults while invoking the vars, so that ansible automatically falls back to it.</p>
 <p>file:  <em>roles/systems/tasks/main.yml</em></p>
 <pre><code>- name: create systems users
@@ -285,129 +284,257 @@ Control structures are of two different type</p>
 <pre><code>ansible-playbook app.yml
 </code></pre>
 
-<h2 id="conditionals">Conditionals</h2>
+<h2 id="refactoring-apache-playbook-to-add-support-for-ubuntu">Refactoring apache playbook to add support for Ubuntu</h2>
 <p>Conditionals structures allow Ansible to choose an alternate path. Ansible does this by using <em>when</em> statements</p>
-<h2 id="when-statements"><strong>When</strong> statements</h2>
 <p>When statement becomes helpful, when you will want to skip a particular step on a particular host</p>
 <h3 id="selectively-calling-install-tasks-based-on-platform">Selectively calling install tasks based on platform</h3>
+<p>Current configuration tasks that we have written is compatible with RedHat platform. It may fail on others. Lets selectively call it based on the platform family.</p>
 <ul>
 <li>Edit <em>roles/apache/tasks/main.yml</em>,</li>
 </ul>
-<pre><code>---
-- include: install.yml
+<pre><code>- import_tasks: config.yml
   when: ansible_os_family == 'RedHat'
-- include: start.yml
-- include: config.yml
+
 </code></pre>
 
 <ul>
-<li>This will include <em>install.yml</em> only if the OS family is Redhat, otherwise it will skip the installation playbook</li>
+<li>This will include <em>config.yml</em> only if the OS family is Redhat, otherwise it will skip the installation playbook</li>
 </ul>
-<h3 id="conditional-execution-of-roles">Conditional Execution of Roles</h3>
-<ul>
-<li>This will execute app playbook only if the node is running <strong>RedHat</strong> family</li>
-<li>Update app.yml to restrict role to be run only on RedHat platform.</li>
-</ul>
+<p>Apache role that we have developed supports only RedHat based systems at the moment. To add support for ubuntu (app2), we must handle platform specific differences.</p>
+<p>e.g.</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">RedHat</th>
+<th align="left">Debian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Package Name</td>
+<td align="left">httpd</td>
+<td align="left">apache2</td>
+</tr>
+<tr>
+<td align="left">Service Name</td>
+<td align="left">httpd</td>
+<td align="left">apache2</td>
+</tr>
+</tbody>
+</table>
+<p>OS specific configurations can be defined by creating role vars and by including those in tasks.</p>
+<p>file: roles/apache/vars/RedHat.yml</p>
 <pre><code>---
-  - name: Playbook to configure App Servers
-    hosts: app
+  apache:
+    package: httpd
+    service:
+      name: httpd
+      state: started
+</code></pre>
+
+<p>file: roles/apache/vars/Debian.yml</p>
+<pre><code>---
+  apache:
+    package: apache2
+    service:
+      name: apache2
+      state: started
+</code></pre>
+
+<p>Lets now selectively include those var files from tasks/main.yml .  Also selectively call configurations.</p>
+<p>file: role/apache/tasks/main.yml</p>
+<pre><code>---
+# tasks file for apache
+
+  - include_vars: &quot;{{ ansible_os_family }}.yml&quot;
+
+  - import_tasks: install.yml
+
+  - import_tasks: service.yml
+
+  - import_tasks: config.yml
+    when: ansible_os_family == 'RedHat'
+
+</code></pre>
+
+<p>Update tasks and handlers to install and start the correct service</p>
+<p>tasks/install.yml</p>
+<pre><code>---
+- name: Install Apache...
+  package:
+    name: &quot;{{ apache.package }}&quot;
+    state: latest
+
+</code></pre>
+
+<p>tasks/service.yml</p>
+<pre><code>---
+- name: Starting Apache...
+  service:
+    name: &quot;{{ apache.service.name }}&quot;  
+    state: &quot;{{ apache.service.state }}&quot;
+</code></pre>
+
+<p>handlers/main.yml</p>
+<pre><code>---
+# handlers file for apache
+- name: Restart apache service
+  service:
+    name: &quot;{{ apache.service.name }}&quot;  
+    state: restarted
+</code></pre>
+
+<p>Now lets update the inventory to add <strong>app3</strong></p>
+<p>file: environments/prod</p>
+<pre><code>[app]
+app1
+app2
+app3 ansible_user=devops ansible_ssh_pass=codespaces
+
+</code></pre>
+
+<p>and apply playbook</p>
+<pre><code>ansible-playbook app.yml
+</code></pre>
+
+<h3 id="selective-execution-by-using-tags">Selective execution by using tags</h3>
+<p>What all can be tagged, <br />
+  * tasks
+  * roles
+  * plays
+  * playbooks</p>
+<p>Options to ansible-playbook  related to tags</p>
+<pre><code>--list-tags
+--list-tasks
+--tags=
+--skip-tags=
+</code></pre>
+
+<p>Tag patterns</p>
+<pre><code>app
+'all:!web'
+'lb:db'
+</code></pre>
+
+<p>Lets tag the tasks</p>
+<p>file: roles/apache/tasks/install.yml</p>
+<pre><code>---
+- name: Install Apache...
+  package:
+    name: &quot;{{ apache.package }}&quot;
+    state: latest
+
+  tags:
+    - apache
+    - install
+</code></pre>
+
+<p>file: roles/apache/tasks/service.yml</p>
+<pre><code>---
+- name: Starting Apache...
+  service:
+    name: &quot;{{ apache.service.name }}&quot;  
+    state: &quot;{{ apache.service.state }}&quot;
+
+  tags:
+    - apache
+    - service  
+</code></pre>
+
+<p>file: roles/apache/tasks/config.yml</p>
+<pre><code>---
+  - name: copy apache config
+    copy:
+      src: httpd.conf
+      dest: /etc/httpd.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: Restart apache service
+    tags:
+      - apache
+      - config
+</code></pre>
+
+<p>Lets tag the roles and plays too,</p>
+<p>file: app.yml</p>
+<pre><code>---
+  - hosts: app
     become: true
     vars:
       fav:
         fruit: mango
     roles:
-    - apache
-    - php
-    - { role: frontend, when: ansible_os_family == 'RedHat' }
+      - { role: apache, tags: www }
+      - { role: php, tags: [ 'www', 'php' ] }
+      - { role: frontend, tags: devopsdemo }
+    tags:
+      - frontend
+
+</code></pre>
+
+<p>and finally the playbooks,</p>
+<p>file: site.yml</p>
+<pre><code>---
+  # This is a sitewide playbook
+  # filename: site.yml
+  - import_playbook: lb.yml
+    tags: lb
+
+  - import_playbook: app.yml
+    tags: app
+
+  - import_playbook: db.yml
+    tags: db
+
+</code></pre>
+
+<p>Now lets influence the tasks execution using tags,</p>
+<pre><code>ansible-playbook site.yml --list-tags
+ansible-playbook site.yml --list-tasks
+ansible-playbook app.yml  --tags=php
+ansible-playbook app.yml  --tags='install:config'
+ansible-playbook site.yml  --tags=frontend
+ansible-playbook app.yml  --skip-tags=devopsdemo
+ansible-playbook site.yml --tags='all:!db:!lb'
+
 
 </code></pre>
 
 <h3 id="adding-conditionals-in-jinja2-templates">Adding conditionals in Jinja2 templates</h3>
 <ul>
-<li>Put the following content in <em>roles/mysql/templates/my.cnf.j2</em></li>
+<li>Put the following content in <em>roles/frontend/templates/config.ini.j2</em></li>
 </ul>
-<pre><code>[mysqld]
-
-{% if mysql.config.datadir is defined %}
-datadir={{ mysql['config']['datadir'] }}
+<pre><code>[prefs]
+{% if fav.color is defined %}
+color  = {{ fav['color'] }}
 {% endif %}
 
-{% if mysql.config.socket is defined %}
-socket={{ mysql['config']['socket'] }}
+{% if fav.fruit is defined %}
+fruit  = {{ fav['fruit'] }}
 {% endif %}
 
-symbolic-links=0
-log-error=/var/log/mysqld.log
-
-{% if mysql.config.pid is defined %}
-pid-file={{ mysql['config']['pid']}}
+{% if fav.car is defined %}
+car    = {{ fav['car'] }}
 {% endif %}
 
-[client]
-user=root
-password={{ mysql_root_db_pass }}
+{% if fav.laptop is defined %}
+laptop = {{ fav['laptop'] }}
+{% endif %}
+
 </code></pre>
 
 <ul>
-<li>
-<p>These conditions will run flawlessly, because we have already defined these Variables</p>
-</li>
-<li>
-<p>Let's run this code</p>
-</li>
+<li>In case if the var is not defined, it will not add the config to this file.</li>
 </ul>
 <pre><code>ansible-playbook site.yml
 </code></pre>
 
-<p>[Output]</p>
-<pre><code>TASK [setup] *******************************************************************
-ok: [192.168.61.12]
-ok: [192.168.61.13]
-
-TASK [base : create admin user] ************************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [base : remove dojo] ******************************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [base : install tree] *****************************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [base : install ntp] ******************************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [base : start ntp service] ************************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [apache : Installing Apache...] *******************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [apache : Starting Apache...] *********************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [apache : Creating configuration from templates...] ***********************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-TASK [apache : Copying index.html file...] *************************************
-skipping: [192.168.61.12]
-skipping: [192.168.61.13]
-
-</code></pre>
-
-<p><strong>Exercise</strong>: Try using <strong>Debian</strong> instead of <strong>RedHat</strong> . You shall see app role being skipped altogether. Don't forget to put it back after you try this out.</p>
 <h2 id="exercises">Exercises</h2>
 <ul>
-<li>Define dictionary of properties for a new database user  in group_vars/all. Observe if it gets created automatically  output by running db.yml playbook. Validate if the user is been actually present by logging on to the mysql server and checking status.</li>
-<li>Update index.html.j2 to iterate over the dictionary of favorites and generate html content to display it instead of adding multiple lines.</li>
-<li>Define a hash/dictionary  of apache virtual hosts to be created  and create a template which would iterate over that dictionary and create vhost configurations.</li>
+<li>Define dictionary of properties for a new user   in group_vars/prod. Observe if it gets created automatically.</li>
+<li>Define a hash/dictionary  of apache virtual hosts to be created,  and create a template which would iterate over that dictionary and create vhost configurations. You would additionally have to create a task to create the vhost configs.</li>
 <li>Learn about what else you could loop over, as well as how to do so by reading this document http://docs.ansible.com/ansible/playbooks_loops.html#id12</li>
 </ul>
               

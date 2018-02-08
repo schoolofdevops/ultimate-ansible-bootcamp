@@ -89,7 +89,15 @@
     <a class="current" href="./">Auto discovery and multi environments</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#placeholder">placeholder</a></li>
+    <li class="toctree-l3"><a href="#magic-variables-for-service-discovery-multiple-environments">Magic Variables for Service Discovery, Multiple Environments</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#create-staging-env">Create staging env</a></li>
+        
+            <li><a class="toctree-l4" href="#cleaning-up">Cleaning up</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -183,7 +191,104 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="placeholder">placeholder</h1>
+                <h1 id="magic-variables-for-service-discovery-multiple-environments">Magic Variables for Service Discovery, Multiple Environments</h1>
+<p>file: ansible.cfg</p>
+<pre><code>fact_caching = yaml
+fact_caching_connection = /tmp/facts
+
+</code></pre>
+
+<p>file: roles/geerlingguy.haproxy/templates/haproxy.cfg.j2</p>
+<pre><code>{% for host in groups['app']  %}
+    server {{ hostvars[host]['ansible_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:80 cookie {{ hostvars[host]['ansible_hostname'] }} check
+{% endfor %}
+
+</code></pre>
+
+<h2 id="create-staging-env">Create staging env</h2>
+<p>production/staging</p>
+<pre><code>[app]
+app2
+
+[db]
+app2
+
+[staging:children]
+app
+db
+
+</code></pre>
+
+<p>file: group_vars/all.yml</p>
+<pre><code>---
+  users:
+    admin:
+      uid: 5001
+      shell: /bin/bash
+      home: /home/admin
+      state: present
+    dojo:
+      state: absent
+
+  systems:
+    packages:
+      - ntp
+      - tree
+      - vim
+
+</code></pre>
+
+<p>file: group_vars/staging.yml</p>
+<pre><code>---
+
+  app:
+    version: 1.5
+    env: staging
+
+  fav:
+    color: blue
+    fruit: watermelon
+
+  dbconn:
+    host: 127.0.0.1
+    user: devops
+    pass: dfkl8d6msoYc0
+    db: devopsdemo
+
+  mysql_root_password: dfdvdHkst0ks72sY
+  mysql_databases:
+    - name: devopsdemo
+      encoding: latin1
+      collation: latin1_general_ci
+  mysql_users:
+    - name: devops
+      host: &quot;%&quot;
+      password: dfkl8d6msoYc0
+      priv: &quot;devopsdemo.*:ALL&quot;
+
+</code></pre>
+
+<h2 id="cleaning-up">Cleaning up</h2>
+<p>cleanup.yml</p>
+<pre><code>---
+  - name: cleanup database server
+    hosts: db
+    become: true
+    tasks:
+      - name: stop mysql service
+        service:
+          name: mysqld
+          state: stopped
+
+      - name: uninstall mysql related packages  
+        package:
+          name: &quot;{{ item }}&quot;
+          state: absent
+        with_items:
+          - mysql-server
+          - mysql
+
+</code></pre>
               
             </div>
           </div>
