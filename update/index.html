@@ -193,8 +193,8 @@
               
                 <h1 id="updating-application">Updating Application</h1>
 <h2 id="writing-database-schema-update-playbook">Writing database schema update playbook</h2>
-<p>The following url has the links to the database dumps
-https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
+<p>The following url has the links to the database dumps  </p>
+<p><a href="https://github.com/devopsdemoapps/devops-demo-app/tree/master/data">Database SQL Dumps</a></p>
 <p>Lets write tasks to update schema for database</p>
 <p>file: db.yml</p>
 <pre><code>---
@@ -271,11 +271,7 @@ https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
     * Enable traffic from load balancer</p>
 <h3 id="pre-tasks">Pre tasks</h3>
 <p>file: deployment.yml</p>
-<pre><code>---
-# Playbook for updating web server in batches
-# filename: deplyoment.yml
-
-- hosts: app
+<pre><code>- hosts: app
   become: yes
   vars:
     app:
@@ -293,11 +289,19 @@ https://github.com/devopsdemoapps/devops-demo-app/tree/master/data</p>
      - frontend
 
   post_tasks:
+    - name: Wait 300 seconds for port 80 to be available
+      wait_for:
+        port: 80
+        host: '{{ inventory_hostname }}'
+        delay: 5
+        timeout: 300
+      connection: local
     - name: add server to loadbalancer
       haproxy:
         host: '{{ inventory_hostname }}'
         state: enabled
       delegate_to: lb
+
 
 </code></pre>
 
