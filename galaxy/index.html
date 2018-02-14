@@ -83,6 +83,12 @@
             
     <li class="toctree-l3"><a href="#setting-up-loadbalancer-with-a-galaxy-role">Setting up loadbalancer with a galaxy role</a></li>
     
+        <ul>
+        
+            <li><a class="toctree-l4" href="#exercises">Exercises</a></li>
+        
+        </ul>
+    
 
     </ul>
                 </li>
@@ -207,6 +213,16 @@ haproxy_backend_servers:
 </code></pre>
 
 <p>http://IPADDRESS/app</p>
+<h2 id="exercises">Exercises</h2>
+<h3 id="nano-project-setup-mysql-database">Nano Project: Setup MySQL Database</h3>
+<p>Now that you have configured load balancer along with the app servers, its time to setup database backend. And you could leverage ansible galaxy instead of writing all the code from scratch.  </p>
+<p>Once you select and install role, create a playbook that would apply to <strong>db</strong> group from inventory.</p>
+<p>In addition to setting up the mysql server, you would create
+  * database: devopsdemo
+  * user: devops
+  * password: password-of-your-choice
+  * root password: password-of-your-choice
+and set grant permissions so that the <strong>devops</strong> user owns <strong>devopsdemo</strong> db. </p>
               
             </div>
           </div>

@@ -337,13 +337,23 @@
         }, 
         {
             "location": "/galaxy/", 
-            "text": "Setting up loadbalancer with a galaxy role\n\n\nansible-galaxy install geerlingguy.haproxy\n\n\n\n\nlb.yml\n\n\n- hosts: lb\n  become: yes\n  roles:\n    - { role: geerlingguy.haproxy }\n\n\n\n\n\nhttp://IPADDRESS/app\n\n\ngroup_vars/prod.yml\n\n\nhaproxy_backend_httpchk: ''\nhaproxy_backend_servers:\n  - name: app1\n    address: 192.168.61.12:80\n  - name: app2\n    address: 192.168.61.13:80\n\n\n\n\n\nhttp://IPADDRESS/app", 
+            "text": "Setting up loadbalancer with a galaxy role\n\n\nansible-galaxy install geerlingguy.haproxy\n\n\n\n\nlb.yml\n\n\n- hosts: lb\n  become: yes\n  roles:\n    - { role: geerlingguy.haproxy }\n\n\n\n\n\nhttp://IPADDRESS/app\n\n\ngroup_vars/prod.yml\n\n\nhaproxy_backend_httpchk: ''\nhaproxy_backend_servers:\n  - name: app1\n    address: 192.168.61.12:80\n  - name: app2\n    address: 192.168.61.13:80\n\n\n\n\n\nhttp://IPADDRESS/app\n\n\nExercises\n\n\nNano Project: Setup MySQL Database\n\n\nNow that you have configured load balancer along with the app servers, its time to setup database backend. And you could leverage ansible galaxy instead of writing all the code from scratch.  \n\n\nOnce you select and install role, create a playbook that would apply to \ndb\n group from inventory.\n\n\nIn addition to setting up the mysql server, you would create\n  * database: devopsdemo\n  * user: devops\n  * password: password-of-your-choice\n  * root password: password-of-your-choice\nand set grant permissions so that the \ndevops\n user owns \ndevopsdemo\n db.", 
             "title": "Setting up Load Balancer with Ansible Galaxy"
         }, 
         {
             "location": "/galaxy/#setting-up-loadbalancer-with-a-galaxy-role", 
             "text": "ansible-galaxy install geerlingguy.haproxy  lb.yml  - hosts: lb\n  become: yes\n  roles:\n    - { role: geerlingguy.haproxy }  http://IPADDRESS/app  group_vars/prod.yml  haproxy_backend_httpchk: ''\nhaproxy_backend_servers:\n  - name: app1\n    address: 192.168.61.12:80\n  - name: app2\n    address: 192.168.61.13:80  http://IPADDRESS/app", 
             "title": "Setting up loadbalancer with a galaxy role"
+        }, 
+        {
+            "location": "/galaxy/#exercises", 
+            "text": "", 
+            "title": "Exercises"
+        }, 
+        {
+            "location": "/galaxy/#nano-project-setup-mysql-database", 
+            "text": "Now that you have configured load balancer along with the app servers, its time to setup database backend. And you could leverage ansible galaxy instead of writing all the code from scratch.    Once you select and install role, create a playbook that would apply to  db  group from inventory.  In addition to setting up the mysql server, you would create\n  * database: devopsdemo\n  * user: devops\n  * password: password-of-your-choice\n  * root password: password-of-your-choice\nand set grant permissions so that the  devops  user owns  devopsdemo  db.", 
+            "title": "Nano Project: Setup MySQL Database"
         }, 
         {
             "location": "/control_structures/", 
