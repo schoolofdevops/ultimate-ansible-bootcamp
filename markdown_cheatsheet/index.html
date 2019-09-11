@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Setting up Zero Downtime Deployment - Ultimate Ansible Bootcamp</title>
+  <title>Markdown cheatsheet - Ultimate Ansible Bootcamp</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Setting up Zero Downtime Deployment";
-    var mkdocs_page_input_path = "update.md";
+    var mkdocs_page_name = "Markdown cheatsheet";
+    var mkdocs_page_input_path = "markdown_cheatsheet.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -93,23 +93,9 @@
                     
     <a class="" href="../ansible-vault/">Encrypting sensitive data with Ansible Vault</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Setting up Zero Downtime Deployment</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#updating-application">Updating Application</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#writing-database-schema-update-playbook">Writing database schema update playbook</a></li>
-        
-            <li><a class="toctree-l4" href="#deployment-playbook">Deployment Playbook</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../update/">Setting up Zero Downtime Deployment</a>
                 </li>
     </ul>
 	    </li>
@@ -177,12 +163,8 @@
     <li><a href="..">Docs</a> &raquo;</li>
     
       
-        
-          <li>Bootcamp &raquo;</li>
-        
-      
     
-    <li>Setting up Zero Downtime Deployment</li>
+    <li>Markdown cheatsheet</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -192,137 +174,168 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="updating-application">Updating Application</h1>
-<h2 id="writing-database-schema-update-playbook">Writing database schema update playbook</h2>
-<p>The following url has the links to the database dumps  </p>
-<p><a href="https://github.com/devopsdemoapps/devops-demo-app/tree/master/data">Database SQL Dumps</a></p>
-<p>Lets write tasks to update schema for database</p>
-<p>file: db.yml</p>
-<pre><code>---
-  - name: playbook to configure db servers
-    hosts: db
-    become: yes
-    roles:
-      - { role: geerlingguy.mysql }
-    tasks:
-      - name: download database schema
-        get_url:
-          url: https://raw.githubusercontent.com/devopsdemoapps/devops-demo-app/master/data/devops-demo-1.0.sql
-          dest: /tmp/devops-demo-1.0.sql
-          mode: 0444
-        tags: schema
-
-      - name: Schema Migrate
-        mysql_db:
-          name: &quot;{{ dbconn.db }}&quot;
-          login_host: &quot;127.0.0.1&quot;
-          login_password: &quot;{{ mysql_root_password }}&quot;
-          login_user: &quot;root&quot;
-          state: import
-          target: /tmp/devops-demo-1.0.sql
-        tags: schema
-
+                <p>{pagebreak}</p>
+<ul>
+<li>
+<h1 id="part">Part</h1>
+</li>
+</ul>
+<h1 id="section">Section</h1>
+<h2 id="sub-section">Sub Section</h2>
+<h3 id="sub-sub-section">Sub Sub Section</h3>
+<h4 id="sub-sub-sub-section">Sub Sub Sub Section</h4>
+<p>This is the
+first para  </p>
+<p>This is the 2nd para
+separated by a line<br />
+This is the 3rd para separated by 2 spaces at the end of line before  </p>
+<p>c&gt;  This is a centered text</p>
+<p><em>italic</em></p>
+<p><strong>bold</strong></p>
+<p><strong><em>bold-italic</em></strong></p>
+<p><strong><em>_underlined</em></strong>_</p>
+<ol>
+<li>Numbered list item 1</li>
+<li>Numbered list item 2</li>
+<li>
+<p>test
+    para between list item 4 indents,
+    blank like after prev item, num seq continues</p>
+</li>
+<li>
+<p>Numbered list item 3  </p>
+</li>
+<li>
+<p>Bullet list item 1</p>
+</li>
+<li>Bullet list item 2</li>
+<li>Sub Item 2.1<ul>
+<li>Sub Sub item 2.1.1</li>
+</ul>
+</li>
+<li>Bullet list item 3</li>
+</ol>
+<p><img alt="caption" src="images/path_to_image" /></p>
+<p>Header</p>
+<p>: description of the header</p>
+<blockquote>
+<p><strong>This is a Block Quote</strong></p>
+<p>Block Quote gets indented</p>
+<blockquote>
+<p>block quote inside a block quote</p>
+</blockquote>
+</blockquote>
+<p><strong>Text Blocks</strong></p>
+<p>Asides</p>
+<p>A&gt; ## This is an aside
+A&gt;
+A&gt; This gets printed in a block</p>
+<p>Warnings</p>
+<p>W&gt; ## This is a Warning
+W&gt;
+W&gt; Always wear the seat belt</p>
+<p>Tips</p>
+<p>T&gt; ## This is a tip
+T&gt;
+T&gt; Bet for number 5 on that table</p>
+<p>Errors</p>
+<p>E&gt; ## This prints an error
+E&gt;
+E&gt; Oops ! You just barged into ladies toilet</p>
+<p>Information</p>
+<p>I&gt; ## This is to print info
+I&gt;
+I&gt;  For your eyes only</p>
+<p>Questions</p>
+<p>Q&gt; ## This prints questions
+Q&gt;
+Q&gt; What came first, chicken or the engg?</p>
+<p>Discussions</p>
+<p>D&gt; ## This is for Discussions
+D&gt;
+D&gt; Lets talk about Life of Pie</p>
+<p>Exercises</p>
+<p>X&gt; ## This is for exercises
+X&gt;
+X&gt; 10 mins on treadmill
+X&gt; followed by two sets of pushups</p>
+<p><strong>Writing Code</strong></p>
+<p>Method 1 : 4 space indentation</p>
+<pre><code>echo "this starts with 4 indents"
+ls -l
+cat /etc/issue
+uptime
+</code></pre>
+<p>Method 2: 8 tildes</p>
+<pre><code>echo &quot;this has 8 tildes on the top and bottom&quot;
+echo &quot;8 tildes is a best practice, but any no. will do &quot;
+uptime
+ls -l
+cat /etc/issue
 </code></pre>
 
-<p>where,
-  * we have added task to download the schema file from a remote uri
-  * load the schema using <strong>import</strong> state</p>
-<p>Its important to use <strong>1.0</strong> as the schema version first time you run as it needs the initial tables.</p>
-<p>Run it for the first time,</p>
-<pre><code>ansible-playbook db.yml  --vault-id prod@~/.vault_prod --tags=schema
+<p>Method 3 : include code from file</p>
+<p>&lt;&lt;(code/sample_code.sh)</p>
+<p>&lt;&lt;<a href="code/sample_code.sh">sample_code_with_title</a></p>
+<p>Method 4 : lp-code style</p>
+<p>{title="Listing ", lang=html, linenos=off}</p>
+<pre><code>echo &quot;this is autocompleted by leanpub plugin for atom&quot;
+uptime
+df -h
+ls -l  
 </code></pre>
 
-<p>Once the initial schema apply is done, update the tasks to use <strong>app.version</strong> for schema update as well</p>
-<pre><code>---
-  - name: playbook to configure db servers
-    hosts: db
-    become: yes
-    roles:
-      - { role: geerlingguy.mysql }
-    tasks:
-      - name: download database schema
-        get_url:
-          url: https://raw.githubusercontent.com/devopsdemoapps/devops-demo-app/master/data/devops-demo-{{ app.version }}.sql
-          dest: /tmp/devops-demo-{{ app.version }}.sql
-          mode: 0444
-        tags: schema
-
-      - name: Schema Migrate
-        mysql_db:
-          name: &quot;{{ dbconn.db }}&quot;
-          login_host: &quot;127.0.0.1&quot;
-          login_password: &quot;{{ mysql_root_password }}&quot;
-          login_user: &quot;root&quot;
-          state: import
-          target: /tmp/devops-demo-{{ app.version }}.sql
-        tags: schema
-
-</code></pre>
-
-<h2 id="deployment-playbook">Deployment Playbook</h2>
-<p>Strategy:
-  * Rolling updates/zero downtime
-  * Batch size = 1</p>
-<p>Deployment strategy and sequence,
-  * Update database schema
-  * For each web server update
-    * Disable load balancer traffic
-    * Deploy new version of the application
-    * Wait for the app to be available
-    * Enable traffic from load balancer</p>
-<h3 id="pre-tasks">Pre tasks</h3>
-<p>file: deployment.yml</p>
-<pre><code>- hosts: app
-  become: yes
-  vars:
-    app:
-      version: 1.6
-  serial: 1
-
-  pre_tasks:
-    - name: take the app server out
-      haproxy:
-        host: '{{ inventory_hostname }}'
-        state: disabled
-      delegate_to: lb
-
-  roles:
-     - frontend
-
-  post_tasks:
-    - name: Wait 300 seconds for port 80 to be available
-      wait_for:
-        port: 80
-        host: '{{ inventory_hostname }}'
-        delay: 5
-        timeout: 300
-      connection: local
-    - name: add server to loadbalancer
-      haproxy:
-        host: '{{ inventory_hostname }}'
-        state: enabled
-      delegate_to: lb
-
-
-</code></pre>
-
-<p>Deploy a new version with</p>
-<pre><code>ansible-playbook deployment.yml
-
-</code></pre>
+<p>Method 5: back ticks ``</p>
+<p><code>echo "this is a short code snippet"</code></p>
+<p><strong>Footnotes</strong></p>
+<p>This is a text para
+and I am writing a
+footnote[^tag1] here</p>
+<p>Later on I add the footnote as</p>
+<p>[^tag1]: description about the footnote. Should contain blank line before and after</p>
+<p><strong>Crosslinks</strong></p>
+<p>This is a cross link to {##Sub Section}</p>
+<p><strong>Table</strong></p>
+<table>
+<thead>
+<tr>
+<th>header1</th>
+<th>header2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r1-c1</td>
+<td>r1-c2</td>
+</tr>
+<tr>
+<td>r2-c1</td>
+<td>r2-c2</td>
+</tr>
+<tr>
+<td>r3-c1</td>
+<td>r3-c2</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th align="left">Header One</th>
+<th align="left">Header Two</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Item One</td>
+<td align="left">Item Two</td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../dynamic_inventory/" class="btn btn-neutral float-right" title="Dynamic Inventory">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
-        <a href="../ansible-vault/" class="btn btn-neutral" title="Encrypting sensitive data with Ansible Vault"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
@@ -346,10 +359,6 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../ansible-vault/" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      
-      
-        <span style="margin-left: 15px"><a href="../dynamic_inventory/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

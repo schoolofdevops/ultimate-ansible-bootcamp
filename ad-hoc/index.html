@@ -13,18 +13,19 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Ad Hoc Server Maangement with Ansible";
     var mkdocs_page_input_path = "ad-hoc.md";
-    var mkdocs_page_url = "/ad-hoc/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -38,7 +39,7 @@
         <a href=".." class="icon icon-home"> Ultimate Ansible Bootcamp</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -344,8 +345,8 @@ Swap:      4128764          0    4128764
 </code></pre>
 
 <h3 id="installing-packages">Installing packages</h3>
-<p>Let us <em>install</em> Docker on app servers</p>
-<pre><code>ansible app -a &quot;yum install -y docker-engine&quot;
+<p>Let us <em>install</em> nano editor on app servers</p>
+<pre><code>ansible app -a &quot;yum install -y nano&quot;
 </code></pre>
 
 <p>This command will fail.</p>
@@ -358,92 +359,36 @@ Loaded plugins: fastestmirror, prioritiesYou need to be root to perform this com
 </code></pre>
 
 <p>Run the fillowing command with sudo permissions.</p>
-<pre><code>ansible app -s -a &quot;yum install -y docker-engine&quot;
+<pre><code>ansible app -s -a &quot;yum install -y nano&quot;
 </code></pre>
 
 <p>This will install docker in our app servers</p>
 <p>[Output]</p>
-<pre><code>192.168.61.12 | SUCCESS | rc=0 &gt;&gt;
-Loaded plugins: fastestmirror, priorities
-Setting up Install Process
-Loading mirror speeds from cached hostfile
- * base: mirrors.nhanhoa.com
- * epel: mirror.rise.ph
- * extras: mirror.fibergrid.in
- * updates: mirror.fibergrid.in
-283 packages excluded due to repository priority protections
-Resolving Dependencies
---&gt; Running transaction check
----&gt; Package docker-engine.x86_64 0:1.7.1-1.el6 will be installed
---&gt; Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package             Arch         Version              Repository          Size
+<pre><code>================================================================================
+ Package         Arch              Version                Repository       Size
 ================================================================================
 Installing:
- docker-engine       x86_64       1.7.1-1.el6          local_docker       4.5 M
+ nano            x86_64            2.0.9-7.el6            base            436 k
 
 Transaction Summary
 ================================================================================
 Install       1 Package(s)
 
-Total download size: 4.5 M
-Installed size: 19 M
+Total download size: 436 k
+Installed size: 1.5 M
 Downloading Packages:
 Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Installing : docker-engine-1.7.1-1.el6.x86_64                             1/1
-  Verifying  : docker-engine-1.7.1-1.el6.x86_64                             1/1
+  Installing : nano-2.0.9-7.el6.x86_64                                      1/1
+  Verifying  : nano-2.0.9-7.el6.x86_64                                      1/1
 
 Installed:
-  docker-engine.x86_64 0:1.7.1-1.el6
+  nano.x86_64 0:2.0.9-7.el6
 
 Complete!
 
-192.168.61.13 | SUCCESS | rc=0 &gt;&gt;
-Loaded plugins: fastestmirror, priorities
-Setting up Install Process
-Loading mirror speeds from cached hostfile
- * base: mirror.fibergrid.in
- * epel: mirror.rise.ph
- * extras: mirror.fibergrid.in
- * updates: mirror.fibergrid.in
-283 packages excluded due to repository priority protections
-Resolving Dependencies
---&gt; Running transaction check
----&gt; Package docker-engine.x86_64 0:1.7.1-1.el6 will be installed
---&gt; Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package             Arch         Version              Repository          Size
-================================================================================
-Installing:
- docker-engine       x86_64       1.7.1-1.el6          local_docker       4.5 M
-
-Transaction Summary
-================================================================================
-Install       1 Package(s)
-
-Total download size: 4.5 M
-Installed size: 19 M
-Downloading Packages:
-Running rpm_check_debug
-Running Transaction Test
-Transaction Test Succeeded
-Running Transaction
-  Installing : docker-engine-1.7.1-1.el6.x86_64                             1/1
-  Verifying  : docker-engine-1.7.1-1.el6.x86_64                             1/1
-
-Installed:
-  docker-engine.x86_64 0:1.7.1-1.el6
-
-Complete!
 </code></pre>
 
 <h3 id="running-commands-one-machine-at-a-time">Running commands one machine at a time</h3>
@@ -507,7 +452,8 @@ Complete!
 
 <h3 id="copy-a-file-using-copy-modules">Copy a file using <em>copy</em> modules</h3>
 <p>We will copy file from control node to app servers.</p>
-<pre><code>ansible app -m copy -a &quot;src=/vagrant/test.txt dest=/tmp/test.txt&quot;
+<pre><code>touch /tmp/test.txt
+ansible app -m copy -a &quot;src=/tmp/test.txt dest=/tmp/test.txt&quot;
 </code></pre>
 
 <p>File will be copied over to our app server machines...</p>
@@ -603,9 +549,8 @@ http://docs.ansible.com/ansible/modules_by_category.html</li>
     </span>
 </div>
     <script>var base_url = '..';</script>
-    <script src="../js/theme.js"></script>
-      <script src="../search/require.js"></script>
-      <script src="../search/search.js"></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>
