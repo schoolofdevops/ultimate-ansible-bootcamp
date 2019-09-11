@@ -12,6 +12,7 @@ On Ansible Control node,
 
 ```
 cd chap4
+ansible --version
 ```
 
 Create **ansible.cfg** in chap4
@@ -24,6 +25,13 @@ retry_files_save_path = /tmp
 host_key_checking = False
 log_path=~/ansible.log
 
+```
+
+Validate that your new configs are picked up,
+
+```
+ansible --version
+ansible-config dump
 ```
 
 ## Creating Host Inventory
@@ -179,10 +187,10 @@ Swap:      4128764          0    4128764
 
 ### Installing packages
 
-Let us *install* Docker on app servers
+Let us *install* nano editor on app servers
 
 ```
-ansible app -a "yum install -y docker-engine"
+ansible app -a "yum install -y nano"
 ```
 
 This command will fail.
@@ -200,7 +208,7 @@ Loaded plugins: fastestmirror, prioritiesYou need to be root to perform this com
 Run the fillowing command with sudo permissions.
 
 ```
-ansible app -s -a "yum install -y docker-engine"
+ansible app -s -a "yum install -y nano"
 ```
 
 This will install docker in our app servers
@@ -208,87 +216,31 @@ This will install docker in our app servers
 [Output]
 
 ```
-192.168.61.12 | SUCCESS | rc=0 >>
-Loaded plugins: fastestmirror, priorities
-Setting up Install Process
-Loading mirror speeds from cached hostfile
- * base: mirrors.nhanhoa.com
- * epel: mirror.rise.ph
- * extras: mirror.fibergrid.in
- * updates: mirror.fibergrid.in
-283 packages excluded due to repository priority protections
-Resolving Dependencies
---> Running transaction check
----> Package docker-engine.x86_64 0:1.7.1-1.el6 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
 ================================================================================
- Package             Arch         Version              Repository          Size
+ Package         Arch              Version                Repository       Size
 ================================================================================
 Installing:
- docker-engine       x86_64       1.7.1-1.el6          local_docker       4.5 M
+ nano            x86_64            2.0.9-7.el6            base            436 k
 
 Transaction Summary
 ================================================================================
 Install       1 Package(s)
 
-Total download size: 4.5 M
-Installed size: 19 M
+Total download size: 436 k
+Installed size: 1.5 M
 Downloading Packages:
 Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Installing : docker-engine-1.7.1-1.el6.x86_64                             1/1
-  Verifying  : docker-engine-1.7.1-1.el6.x86_64                             1/1
+  Installing : nano-2.0.9-7.el6.x86_64                                      1/1
+  Verifying  : nano-2.0.9-7.el6.x86_64                                      1/1
 
 Installed:
-  docker-engine.x86_64 0:1.7.1-1.el6
+  nano.x86_64 0:2.0.9-7.el6
 
 Complete!
 
-192.168.61.13 | SUCCESS | rc=0 >>
-Loaded plugins: fastestmirror, priorities
-Setting up Install Process
-Loading mirror speeds from cached hostfile
- * base: mirror.fibergrid.in
- * epel: mirror.rise.ph
- * extras: mirror.fibergrid.in
- * updates: mirror.fibergrid.in
-283 packages excluded due to repository priority protections
-Resolving Dependencies
---> Running transaction check
----> Package docker-engine.x86_64 0:1.7.1-1.el6 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package             Arch         Version              Repository          Size
-================================================================================
-Installing:
- docker-engine       x86_64       1.7.1-1.el6          local_docker       4.5 M
-
-Transaction Summary
-================================================================================
-Install       1 Package(s)
-
-Total download size: 4.5 M
-Installed size: 19 M
-Downloading Packages:
-Running rpm_check_debug
-Running Transaction Test
-Transaction Test Succeeded
-Running Transaction
-  Installing : docker-engine-1.7.1-1.el6.x86_64                             1/1
-  Verifying  : docker-engine-1.7.1-1.el6.x86_64                             1/1
-
-Installed:
-  docker-engine.x86_64 0:1.7.1-1.el6
-
-Complete!
 ```
 
 ### Running commands one machine at a time
@@ -368,7 +320,8 @@ This will create user *devops*,
 We will copy file from control node to app servers.
 
 ```
-ansible app -m copy -a "src=/vagrant/test.txt dest=/tmp/test.txt"
+touch /tmp/test.txt
+ansible app -m copy -a "src=/tmp/test.txt dest=/tmp/test.txt"
 ```
 
 File will be copied over to our app server machines...

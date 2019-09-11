@@ -1,14 +1,17 @@
 # Ultimate Ansible Bootcamp
 
-* [ Chapter 1: Introduction to Ansible (TBA) ](https://initcron.github.io/ultimate-ansible-bootcamp)
-* [ Chapter 2: Setting up Learning Environment (TBA) ](https://initcron.github.io/ultimate-ansible-bootcamp)
-* [Chapter 3: Ad Hoc Server Management  Management](https://initcron.github.io/ultimate-ansible-bootcamp/ad-hoc)
-* [ Chapter 4: Modules - The Batteries Included ](https://initcron.github.io/ultimate-ansible-bootcamp/modules)
-* [ Chapter 5: Playbooks - Learning to Write Infrastructure as a Code ](https://initcron.github.io/ultimate-ansible-bootcamp/playbooks)
-* [Chapter 6: Working with Roles ](https://initcron.github.io/ultimate-ansible-bootcamp/roles/)
-* [Chapter 7: Variables and Templates](https://initcron.github.io/ultimate-ansible-bootcamp/templates_and_variables/)
-* [Chapter 8: Control Structures](https://initcron.github.io/ultimate-ansible-bootcamp/control_structures/)
-
+* [ Chapter1: Introduction to Ansible]( )
+* [Chapter2: Path to Automation]( )
+* [ Chapter3 : Setting up Learning Environment ](setup.md)
+* [Chapter 4: Ad Hoc Server Management  Management](ad-hoc.md)
+* [ Chapter 5: Playbooks - Learning to Write Infrastructure as a Code ](playbooks.md)
+* [Chapter 6: Working with Roles ](roles.md)
+* [Chapter 7: Variables and Templates](templates_and_variables.md)
+* [Chapter 8: Ansible Galaxy](galaxy.md)
+* [Chapter 9: Control Structures](control_structures.md)
+* [Chapter10: Magic Variables and Multiple Environments]( )
+* [Chapter11: Vault](ansible_vault.md)
+* [Chapter12: Deployment](update.md)
 
 ### License (CC-BY-NC-ND)
 
