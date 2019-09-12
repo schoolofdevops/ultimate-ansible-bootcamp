@@ -15,6 +15,7 @@ Lets try to discover information about our systems by using facts.
 
 * Run the following command to see to facts of db servers  
 ```
+cd chap7
 ansible db -m setup
 ```
 
@@ -74,6 +75,8 @@ file: roles/frontend/defaults/main.yml
 ```
 
 Update tasks to use the var defined above,
+
+`wherever you see version number e.g. 1.1, replace that with {{ app.version }} var.`
 
 file: roles/frontend/tasks/main.yml
 
@@ -194,9 +197,10 @@ file: roles/frontend/tasks/main.yml ( append the following code to the file)
 ```
 
 
-Now, run the playbook, reload the application page and validate. You should also check http://IPADDRESS:81/app/prefs.php to view if it prints the preferences you defined in the default vars.   
+Now, run the playbook, reload the application page and validate. You should also browse to  http://IPADDRESS:81/app/prefs.php to view if it prints the preferences you defined in the default vars.   
 
 ```
+cd chap7
 ansible-playbook  app.yml
 ```
 
@@ -209,7 +213,7 @@ Lets define the variables from couple of other places, to learn about the Preced
 
 Since we are going to define the variables using multi level hashes,  define the way hashes behave when defined from multiple places.
 
-Update chap7/ansible.cfg and add the following,
+Update `chap7/ansible.cfg` and add the following,
 
 ```
 hash_behaviour=merge
@@ -237,14 +241,15 @@ Lets also add vars to playbook. Edit app.yml and add vars as below,
 
 ```
 ---
-  - name: Playbook to configure App Servers
-    hosts: app
+  - hosts: app
     become: true
     vars:
       fav:
         fruit: mango
     roles:
-    - apache
+      - apache
+      - php
+      - frontend
 ```
 
 Execute the playbook and check the output
@@ -278,15 +283,20 @@ If you view the content of the html file generated, you would notice the followi
 
 Lets create a playbook to run a shell command, register the result and display the value of registered variable.
 
-Create **register.yml** in chap6 directory
+Create **register.yml** in chap7 directory
 
 ```
 ---
   - name: register variable example
     hosts: local
     tasks:
+      - name: install net tools to make ifconfig command available
+        package:
+          name: net-tools
+          state: installed
+
       - name: run a shell command and register result
-        shell: "/sbin/ifconfig eth1"
+        shell: "/sbin/ifconfig eth0"
         register: result
 
       - name: print registered variable
@@ -344,7 +354,7 @@ file: role/apache/tasks/main.yml
 # tasks file for apache
   - include_vars: "{{ ansible_os_family }}.yml"
   - include: install.yml
-  - include: start.yml
+  - include: service.yml
   - include: config_{{ ansible_os_family }}.yml  
 ```
 
@@ -378,7 +388,7 @@ tasks/install.yml
       state=installed
 ```
 
-tasks/start.yml
+tasks/service.yml
 
 ```
 ---
@@ -397,6 +407,23 @@ handlers/main.yml
     service: >
       name={{ apache['service']['name']}}
       state=restarted
+```
+
+Now add host app3 to the inventory
+
+`file: environments/prod`
+
+```
+[app]
+app1
+app2
+app3 ansible_password=codespaces
+```
+
+and apply playbook
+
+```
+ansible-playbook app.yml
 ```
 
 ## Exercises
