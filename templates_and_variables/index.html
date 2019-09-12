@@ -215,7 +215,8 @@
 <ul>
 <li>Run the following command to see to facts of db servers  </li>
 </ul>
-<pre><code>ansible db -m setup
+<pre><code>cd chap7
+ansible db -m setup
 </code></pre>
 
 <p>[Output]</p>
@@ -265,6 +266,7 @@
 </code></pre>
 
 <p>Update tasks to use the var defined above,</p>
+<p><code>wherever you see version number e.g. 1.1, replace that with {{ app.version }} var.</code></p>
 <p>file: roles/frontend/tasks/main.yml</p>
 <pre><code>- name: Download and extract the release
   unarchive:
@@ -367,8 +369,9 @@ laptop = {{ fav['laptop'] }}
     mode: 0644
 </code></pre>
 
-<p>Now, run the playbook, reload the application page and validate. You should also check http://IPADDRESS:81/app/prefs.php to view if it prints the preferences you defined in the default vars.   </p>
-<pre><code>ansible-playbook  app.yml
+<p>Now, run the playbook, reload the application page and validate. You should also browse to  http://IPADDRESS:81/app/prefs.php to view if it prints the preferences you defined in the default vars.   </p>
+<pre><code>cd chap7
+ansible-playbook  app.yml
 </code></pre>
 
 <h2 id="beyond-defaults-playing-with-vars-precedence">Beyond defaults - Playing with vars precedence</h2>
@@ -376,7 +379,7 @@ laptop = {{ fav['laptop'] }}
 <em> group_vars
 </em> playbook vars</p>
 <p>Since we are going to define the variables using multi level hashes,  define the way hashes behave when defined from multiple places.</p>
-<p>Update chap7/ansible.cfg and add the following,</p>
+<p>Update <code>chap7/ansible.cfg</code> and add the following,</p>
 <pre><code>hash_behaviour=merge
 </code></pre>
 
@@ -396,14 +399,15 @@ touch prod.yml
 
 <p>Lets also add vars to playbook. Edit app.yml and add vars as below,</p>
 <pre><code>---
-  - name: Playbook to configure App Servers
-    hosts: app
+  - hosts: app
     become: true
     vars:
       fav:
         fruit: mango
     roles:
-    - apache
+      - apache
+      - php
+      - frontend
 </code></pre>
 
 <p>Execute the playbook and check the output</p>
@@ -460,13 +464,18 @@ touch prod.yml
 </ul>
 <h2 id="registered-variables">Registered  Variables</h2>
 <p>Lets create a playbook to run a shell command, register the result and display the value of registered variable.</p>
-<p>Create <strong>register.yml</strong> in chap6 directory</p>
+<p>Create <strong>register.yml</strong> in chap7 directory</p>
 <pre><code>---
   - name: register variable example
     hosts: local
     tasks:
+      - name: install net tools to make ifconfig command available
+        package:
+          name: net-tools
+          state: installed
+
       - name: run a shell command and register result
-        shell: &quot;/sbin/ifconfig eth1&quot;
+        shell: &quot;/sbin/ifconfig eth0&quot;
         register: result
 
       - name: print registered variable
@@ -528,7 +537,7 @@ file: role/apache/tasks/main.yml</p>
 # tasks file for apache
   - include_vars: &quot;{{ ansible_os_family }}.yml&quot;
   - include: install.yml
-  - include: start.yml
+  - include: service.yml
   - include: config_{{ ansible_os_family }}.yml  
 </code></pre>
 
@@ -554,7 +563,7 @@ file: role/apache/tasks/main.yml</p>
       state=installed
 </code></pre>
 
-<p>tasks/start.yml</p>
+<p>tasks/service.yml</p>
 <pre><code>---
   - name: start httpd service
     service: &gt;
@@ -569,6 +578,18 @@ file: role/apache/tasks/main.yml</p>
     service: &gt;
       name={{ apache['service']['name']}}
       state=restarted
+</code></pre>
+
+<p>Now add host app3 to the inventory</p>
+<p><code>file: environments/prod</code></p>
+<pre><code>[app]
+app1
+app2
+app3 ansible_password=codespaces
+</code></pre>
+
+<p>and apply playbook</p>
+<pre><code>ansible-playbook app.yml
 </code></pre>
 
 <h2 id="exercises">Exercises</h2>
