@@ -191,10 +191,14 @@
             <div class="section">
               
                 <h1 id="setting-up-loadbalancer-with-a-galaxy-role">Setting up loadbalancer with a galaxy role</h1>
-<pre><code>ansible-galaxy install geerlingguy.haproxy
+<p>With this lab, you are going to setup HAProxy, a lightweight open source load balancer using a role available in Ansible Galaxy.  </p>
+<p>Browse to <a href="https://galaxy.ansible.com/">Ansible Galaxy</a> to browse or search for the roles available and understand how Galaxy works. Then proceed with the steps below to setup haproxy.</p>
+<p>Fetch a role from galaxy as,</p>
+<pre><code>cd chap8
+ansible-galaxy install geerlingguy.haproxy
 </code></pre>
 
-<p>lb.yml</p>
+<p>Create a new playbook in the top level dir with name <strong>lb.yml</strong></p>
 <pre><code>- hosts: lb
   become: yes
   roles:
@@ -202,8 +206,9 @@
 
 </code></pre>
 
-<p>http://IPADDRESS/app</p>
-<p>group_vars/prod.yml</p>
+<p>Also add the custom vars that you would like to override and customize as per your setup.</p>
+<p>e.g.</p>
+<p><code>file: group_vars/prod.yml</code></p>
 <pre><code>haproxy_backend_httpchk: ''
 haproxy_backend_servers:
   - name: app1
@@ -213,7 +218,29 @@ haproxy_backend_servers:
 
 </code></pre>
 
+<p>And apply the playbook</p>
+<pre><code>ansible-playbook lb.yml
+</code></pre>
+
+<p>To validate, load the haproxy configurations now for load balancer which is now running on port 80 on your host.</p>
 <p>http://IPADDRESS/app</p>
+<p>You could also verify by checking the haproxy configs as</p>
+<pre><code>ssh devops@lb
+
+cat /etc/haproxy/haproxy.cfg
+</code></pre>
+
+<p>You should see the following block configured in haproxy.cfg</p>
+<pre><code>backend habackend
+    mode http
+    balance roundrobin
+    option forwardfor
+    cookie SERVERID insert indirect
+    server app1 192.168.61.12:80 cookie app1 check
+    server app2 192.168.61.13:80 cookie app2 check
+</code></pre>
+
+<p>Which confirms that haproxy has picked up the web servers and load balancing traffic across it.</p>
 <h2 id="exercises">Exercises</h2>
 <h3 id="nano-project-setup-mysql-database">Nano Project: Setup MySQL Database</h3>
 <p>Now that you have configured load balancer along with the app servers, its time to setup database backend. And you could leverage ansible galaxy instead of writing all the code from scratch.  </p>
@@ -223,7 +250,7 @@ haproxy_backend_servers:
   * user: devops
   * password: password-of-your-choice
   * root password: password-of-your-choice
-and set grant permissions so that the <strong>devops</strong> user owns <strong>devopsdemo</strong> db. </p>
+and set grant permissions so that the <strong>devops</strong> user owns <strong>devopsdemo</strong> db.</p>
               
             </div>
           </div>
