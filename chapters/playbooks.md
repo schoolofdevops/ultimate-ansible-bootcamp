@@ -37,16 +37,25 @@ cd  chap5
     become: true
     tasks:
       - name: create admin user
-        user: name=admin state=present uid=5001
+        user:
+          name: admin
+          state: present
+          uid: 5001
 
       - name: remove dojo
-        user: name=dojo  state=absent
+        user:
+          name: dojo  
+          state: absent
 
       - name: install tree
-        yum:  name=tree  state=present
+        yum:  
+          name: tree  
+          state: present
 
       - name: install ntp
-        yum:  name=ntp   state=present
+        yum:  
+          name: ntp   
+          state: present
 
 ```
 
@@ -181,9 +190,11 @@ We are now going to add a new task to the playbook that we created. This task wo
 When you add this task, make sure the indentation is correct.
 
 ```
-
-      - name: start ntp service
-        service: name=ntp state=started enabled=yes
+- name: start ntp service
+  service:
+    name: ntp
+    state: started
+    enabled: yes
 
 ```
 
@@ -271,10 +282,16 @@ Lets add a second play specific to app servers. Add the following block of code 
   become: true
   tasks:
     - name: create deploy user
-      user: name=deploy state=present uid=5003
+      user:
+        name: deploy
+        state: present
+        uid: 5003
 
     - name: install git
-      yum:  name=git  state=present
+      yum:  
+        name: git  
+        state: present
+      
 ```
 
 Run the playbook again...  

@@ -78,6 +78,18 @@ db
 
 The inventory file should look like below.
 
+### Working with Inventory Command
+
+```
+ansible-inventory --help
+
+ansible-inventory --list
+
+ansible-inventory --graph
+
+
+
+```
 
 ### Ansible ping
 
