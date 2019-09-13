@@ -232,16 +232,25 @@
     become: true
     tasks:
       - name: create admin user
-        user: name=admin state=present uid=5001
+        user:
+          name: admin
+          state: present
+          uid: 5001
 
       - name: remove dojo
-        user: name=dojo  state=absent
+        user:
+          name: dojo  
+          state: absent
 
       - name: install tree
-        yum:  name=tree  state=present
+        yum:  
+          name: tree  
+          state: present
 
       - name: install ntp
-        yum:  name=ntp   state=present
+        yum:  
+          name: ntp   
+          state: present
 
 </code></pre>
 
@@ -350,9 +359,11 @@ changed: [192.168.61.14]
 <h2 id="error-handling-and-debugging">Error Handling and Debugging</h2>
 <p>We are now going to add a new task to the playbook that we created. This task would start ntp service on all prod hosts.</p>
 <p>When you add this task, make sure the indentation is correct.</p>
-<pre><code>
-      - name: start ntp service
-        service: name=ntp state=started enabled=yes
+<pre><code>- name: start ntp service
+  service:
+    name: ntp
+    state: started
+    enabled: yes
 
 </code></pre>
 
@@ -428,10 +439,16 @@ ok: [db]
   become: true
   tasks:
     - name: create deploy user
-      user: name=deploy state=present uid=5003
+      user:
+        name: deploy
+        state: present
+        uid: 5003
 
     - name: install git
-      yum:  name=git  state=present
+      yum:  
+        name: git  
+        state: present
+
 </code></pre>
 
 <p>Run the playbook again...  </p>

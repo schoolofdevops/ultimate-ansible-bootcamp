@@ -260,6 +260,17 @@ db
 <li>Third group holds the information about the database servers.</li>
 </ul>
 <p>The inventory file should look like below.</p>
+<h3 id="working-with-inventory-command">Working with Inventory Command</h3>
+<pre><code>ansible-inventory --help
+
+ansible-inventory --list
+
+ansible-inventory --graph
+
+
+
+</code></pre>
+
 <h3 id="ansible-ping">Ansible ping</h3>
 <p>We will use Ansible to make sure all the hosts are reachable</p>
 <pre><code>ansible all -m ping
