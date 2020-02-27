@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/setup/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/setup/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/ad-hoc/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/ad-hoc/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/playbooks/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/playbooks/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/roles/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/roles/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/templates_and_variables/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/templates_and_variables/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/galaxy/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/galaxy/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/control_structures/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/control_structures/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/magicvars_envs/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/magicvars_envs/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/ansible-vault/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/ansible-vault/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/update/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/update/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/dynamic_inventory/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/dynamic_inventory/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/ansible-windows/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/ansible-windows/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/ansible-pull/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/ansible-pull/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/ansible-pull/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/ansible-pull/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/registered_variables/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/registered_variables/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/custom_modules/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/custom_modules/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://ansible-tutorial.schoolofdevops.com/troubleshooting/</loc>
+     <loc>https://ansible-tutorial.schoolofdevops.com/troubleshooting/</loc>
      <lastmod>2020-02-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
